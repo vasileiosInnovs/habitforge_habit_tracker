@@ -1,12 +1,14 @@
-from . import db, metadata
+from . import *
 
-participation = db.Table(
-    'participation',
-    db.metadata,
-    db.Column('user_id', db.Integer, db.ForeignKey(
-        'users.id'), primary_key=True),
-    db.Column('challenge_id', db.Integer, db.ForeignKey(
-        'challenges.id'), primary_key=True),
-    db.Column('reason_for_joining', db.String),
-    db.Column('personal_goal', db.String)
-)
+class Participation(db.Model):
+    __tablename__ = 'participations'
+
+    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
+    challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id"))
+    reason_for_joining = db.Column(db.String())
+    personal_goal = db.Column(db.String())
+
+    user = db.relationship('User', back_populates="participation")
+
+    def __repr__(self):
+        return f'<User: {self.user_id}, Challenge: {self.challenge_id}, Reason for joining: {self.reason_for_joining}, Personal goal: {self.personal_goal}>'
