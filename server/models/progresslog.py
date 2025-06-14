@@ -1,4 +1,4 @@
-from . import db
+from . import *
 
 class ProgressLog(db.Model):
     __tablename__ = 'progresslogs'
@@ -9,6 +9,9 @@ class ProgressLog(db.Model):
     date = db.Column(db.DateTime(), onupdate=db.func.now())
     status = db.Column(db.String())
     note = db.Column(db.String())
+
+    habit = db.relationship('Habit', back_populates="progresslogs")
+    challenge = db.relationship('Challenge', back_populates="progresslogs")
 
     def __repr__(self):
         return f'<Habit: {self.habit_id}, Challenge: {self.challenge_id}, Date: {self.date}, Status: {self.status}>'

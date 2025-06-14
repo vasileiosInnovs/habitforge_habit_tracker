@@ -7,3 +7,8 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy(metadata=metadata)
 
+from .user import User
+from .habit import Habit
+from .challenge import Challenge
+from .progresslog import ProgressLog
+from .participation import participation
