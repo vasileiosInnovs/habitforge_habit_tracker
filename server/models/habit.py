@@ -1,12 +1,15 @@
 from . import *
+from sqlalchemy_serializer import SerializerMixin
 
-class Habit(db.Model):
+class Habit(db.Model, SerializerMixin):
     __tablename__ = 'habits'
 
+    serialize_rules = ('-user.habit','-progresslogs.habit',)
+
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String())
-    description = db.Column(db.String())
-    frequency = db.Column(db.String())
+    name = db.Column(db.String(), nullable=True, unique=True)
+    description = db.Column(db.String(255))
+    frequency = db.Column(db.String(), nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
 
     user = db.relationship('User', back_populates="habits")

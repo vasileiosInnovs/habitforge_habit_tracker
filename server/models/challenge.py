@@ -1,10 +1,13 @@
 from . import *
+from sqlalchemy_serializer import SerializerMixin
 
-class Challenge(db.Model):
+class Challenge(db.Model, SerializerMixin):
     __tablename__ = 'challenges'
 
+    serialize_rules = ('-participations.challenge', '-progresslogs.challenge',)
+
     id = db.Column(db.Integer(), primary_key=True)
-    title = db.Column(db.String())
+    title = db.Column(db.String(), nullable=False)
     description = db.Column(db.String())
     start_date = db.Column(db.DateTime(), server_default=db.func.now())
     end_date = db.Column(db.DateTime()) 

@@ -1,12 +1,15 @@
 from . import *
+from sqlalchemy_serializer import SerializerMixin
 
-class Participation(db.Model):
+class Participation(db.Model, SerializerMixin):
     __tablename__ = 'participations'
+
+    serialize_rules = ('-user.habit', '-challenge.habit',)
 
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
     challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id"))
-    reason_for_joining = db.Column(db.String())
-    personal_goal = db.Column(db.String())
+    reason_for_joining = db.Column(db.Text)
+    personal_goal = db.Column(db.Text)
 
     user = db.relationship('User', back_populates="participations")
     challenge = db.relationship('Challenge', back_populates="participations", cascade='all, delete-orphan')
