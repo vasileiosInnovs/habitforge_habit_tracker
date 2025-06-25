@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 class Challenge(db.Model, SerializerMixin):
     __tablename__ = 'challenges'
 
-    serialize_rules = ('-participations.challenge', '-progresslogs.challenge',)
+    serialize_rules = ('-participation.challenge', '-progresslogs.challenge',)
 
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(), nullable=False)

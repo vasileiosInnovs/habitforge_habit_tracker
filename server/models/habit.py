@@ -4,13 +4,13 @@ from sqlalchemy_serializer import SerializerMixin
 class Habit(db.Model, SerializerMixin):
     __tablename__ = 'habits'
 
-    serialize_rules = ('-user.habit','-progresslogs.habit',)
+    serialize_rules = ('-user.habits','-progresslogs.habit',)
 
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(), nullable=True, unique=True)
     description = db.Column(db.String(255))
     frequency = db.Column(db.String(), nullable=False)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
 
     user = db.relationship('User', back_populates="habits")
     progresslogs = db.relationship('ProgressLog', back_populates="habit", cascade='all, delete-orphan')

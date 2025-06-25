@@ -4,10 +4,10 @@ from sqlalchemy_serializer import SerializerMixin
 class Participation(db.Model, SerializerMixin):
     __tablename__ = 'participations'
 
-    serialize_rules = ('-user.habit', '-challenge.habit',)
+    serialize_rules = ('-user.participation', '-challenge.participation',)
 
-    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
-    challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id"))
+    user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete='CASCADE'))
+    challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id", ondelete='CASCADE'))
     reason_for_joining = db.Column(db.Text)
     personal_goal = db.Column(db.Text)
 

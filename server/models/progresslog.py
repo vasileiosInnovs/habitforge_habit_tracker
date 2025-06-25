@@ -4,11 +4,11 @@ from sqlalchemy_serializer import SerializerMixin
 class ProgressLog(db.Model, SerializerMixin):
     __tablename__ = 'progresslogs'
 
-    serialize_rules = ('-habit.progresslog', '-challenge.progresslog',)
+    serialize_rules = ('-habit.progresslogs', '-challenge.progresslogs',)
 
     id = db.Column(db.Integer(), primary_key=True)
-    habit_id = db.Column(db.Integer(), db.ForeignKey("habits.id"), nullable=False)
-    challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id"), nullable=True)
+    habit_id = db.Column(db.Integer(), db.ForeignKey("habits.id", ondelete='CASCADE'), nullable=False)
+    challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id", ondelete='CASCADE'), nullable=True)
     date = db.Column(db.DateTime(), onupdate=db.func.now())
     status = db.Column(db.Text, nullable=False, default='Completed✅')
     note = db.Column(db.Text)

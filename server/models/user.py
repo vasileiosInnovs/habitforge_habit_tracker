@@ -7,7 +7,7 @@ from . import *
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-habits.user', '-participations.user',)
+    serialize_rules = ('-habits.user', '-participation.user',)
 
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.Text(), nullable=False)
