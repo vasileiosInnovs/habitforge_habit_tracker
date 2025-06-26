@@ -6,8 +6,10 @@ class Participation(db.Model, SerializerMixin):
 
     serialize_rules = ('-user.participation', '-challenge.participation',)
 
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete='CASCADE'))
     challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id", ondelete='CASCADE'))
+    
     reason_for_joining = db.Column(db.Text)
     personal_goal = db.Column(db.Text)
 

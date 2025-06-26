@@ -11,4 +11,4 @@ from .user import User
 from .habit import Habit
 from .challenge import Challenge
 from .progresslog import ProgressLog
-from .participation import participation
+from .participation import Participation
