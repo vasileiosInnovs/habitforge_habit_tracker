@@ -2,6 +2,7 @@ from flask import request, session, make_response, jsonify
 from flask_restful import Resource
 
 from models import db, User
+from config import api
 
 class SignUp(Resource):
     def post(self):
@@ -45,5 +46,69 @@ class SignUp(Resource):
                 jsonify(response_dict),
                 422
             )
+        
+class CheckSession(Resource):
+    def get(self):
+        user_id = session.get('user_id')
 
+        if user_id:
+            user = User.query.filter(User.id == user_id).first()
 
+            if user:
+                user_dict = {
+                    'id': user.id,
+                    'username': user.username,
+                    'image_url': user.image_url,
+                    'bio': user.bio
+                }
+                return make_response(jsonify(user_dict), 200)
+            else:
+                return {'message': 'User not found'}, 404
+        else:
+            return {'message': '401: Not Authorized'}, 401
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+
+        username = data.get('username')
+        password = data.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_pass(password):
+            session['user_id'] = user.id
+
+            return {
+                "username": user.username,
+                "image URL": user.image_url,
+                "bio": user.bio
+            }, 200
+        
+        else:
+            return {
+                "error": "Username or password is incorrect."
+            }, 401
+        
+class Logout(Resource):
+    def delete(self):
+
+        if session.get('user_id'):
+            session.pop('user_id')
+
+            response = {"message": " "}
+
+            return make_response(
+                jsonify(response),
+                204
+            )
+        
+        else:
+            response = {"error": "Unauthorized!"}
+
+            return make_response(jsonify(response), 401)
+
+api.add_resource(SignUp, '/signup', endpoint='signup')
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
+api.add_resource(Login, '/login', endpoint='login')
+api.add_resource(Logout, '/logout', endpoint='logout')
