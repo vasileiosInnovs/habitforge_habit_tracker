@@ -54,6 +54,8 @@ function SignupForm({ onSignup }) {
                     <label>Bio</label>
                     <Field name="bio" className="input" as="textarea" />
                     <ErrorMessage name="bio" component="div" className="text-red-500 text-sm"/>
+
+                    <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Sign Up</button>
                 </From>
             </Formik>
         </div>
