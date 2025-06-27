@@ -12,6 +12,7 @@ class Participation(db.Model, SerializerMixin):
     
     reason_for_joining = db.Column(db.Text)
     personal_goal = db.Column(db.Text)
+    join_date = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship('User', back_populates="participations")
     challenge = db.relationship('Challenge', back_populates="participations", cascade='all, delete-orphan')
