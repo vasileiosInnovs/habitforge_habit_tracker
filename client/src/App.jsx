@@ -2,14 +2,15 @@ import logo from './logo.svg';
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from '../../client/src/components/N';
-import JoinChallengeForm from "../../client/src/components/JoinChallengeForm";
-import ProgressLog from "../../client/src/components/ProgressLog";
-import LoginForm from "../../client/src/components/HabitForm";
-import SignupForm from "../../client/src/components/SignUpForm";
-import ChallengeForm from "../../client/src/components/ChallengeForm";
-import MyDay from "../../client/src/components/MyDay";
-import Home from "../../client/src/components/Home";
+import NavBar from './components/NavBar';
+import JoinChallengeForm from "./components/JoinChallengeForm";
+import ProgressLog from "./components/ProgressLog";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignUpForm";
+import ChallengeForm from "./components/ChallengeForm";
+import HabitForm from "./components/HabitForm"
+import MyDay from "./components/MyDay";
+import Home from "./components/Home";
 
 function App() {
   function App() {
