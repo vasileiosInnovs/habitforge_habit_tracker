@@ -37,6 +37,10 @@ useEffect(() => {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold text-center mb-4">🌞 My Day</h1>
 
+      <p className="text-green-600 font-semibold">
+        {streak} habit{streak !== 1 ? 's' : ''} completed today 🎉
+      </p>
+
       <div className="mb-6 text-center">
         <h2 className="text-xl font-semibold mb-2">🔥 Streak</h2>
         <div className="flex justify-center gap-2 text-2xl">

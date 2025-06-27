@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 
 function Home() {
   return (
+
     <div className="min-h-screen bg-gradient-to-b from-[#fefcea] to-[#f1da36] flex flex-col items-center justify-center px-6 py-10">
       <div className="text-center max-w-2xl">
+        <h1 className="text-3xl font-bold text-center mb-4">Welcome back, {username} 👋</h1>
         <h1 className="text-5xl font-extrabold text-gray-800 mb-4 tracking-tight">
           Transform Your Life, One Habit at a Time
         </h1>
