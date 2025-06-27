@@ -1,5 +1,6 @@
 from flask import request, session, make_response, jsonify
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 
 from models import db, User
 from config import api
@@ -39,9 +40,9 @@ class SignUp(Resource):
                jsonify(new_user_dict),
                201
            )
-        except:
+        except IntegrityError:
+            db.session.rollback()
             response_dict = {"message": "Invalid sign up"}
-
             return make_response(
                 jsonify(response_dict),
                 422
