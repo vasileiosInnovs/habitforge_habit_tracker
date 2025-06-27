@@ -80,6 +80,57 @@ class ProgressLog(Resource):
             return jsonify({"error": str(e)}), 400
 
 class Log(Resource):
-    pass
+    def patch(self, id):
+        user_id = session.get("user_id")
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        log = ProgressLog.query.get(id)
+        if not log or log.user_id != user_id:
+            return jsonify({
+                'error': 'Log not found or authorized'
+            }), 404
+        
+        data = request.get_json()
+
+        log.status = data.get('status', log.status)
+        log.note = data.get('note', log.note)
+        log.rating = data.get('rating', log.rating)
+
+        try:
+            db.session.commit()
+            return jsonify({
+                'message': 'Log updated successfully'
+            }), 200
+        except:
+            db.session.rollback()
+            return jsonify({
+                'error': 'Failed to update log'
+            }), 500
+        
+    def delete(self):
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({
+                'error': 'Unauthorized'
+            }), 401
+        
+        log = ProgressLog.query.get(id)
+        if not log or log.user_id != user_id:
+            return jsonify({
+                'error': 'Log not found or unauthorized'
+            }), 404
+        
+        try:
+            db.session.delete(log)
+            db.session.commit()
+            return jsonify({
+                'message': 'Log deleted'
+            }), 204
+        except:
+            db.session.rollback()
+            return jsonify({
+                'error': 'Failed to delete log'
+            }), 500
 
 api.add_resource(ProgressLog, '/logs', endpoint='progress_log')
