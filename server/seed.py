@@ -1,12 +1,25 @@
 from app import app
 from models import *
 from faker import Faker
-from random import choice, randint, random
+from random import choice, randint, random, sample
 
 with app.app_context():
     fake = Faker()
 
     bios = ['Collects rare teas and unfinished journals.','Loves thunderstorms, hates loud typing.', 'Can juggle three oranges but not responsibilities.', 'Obsessed with maps, mushrooms, and metaphors.', 'Plants more succulents than makes sense.', 'Tracks habits religiously but loses socks constantly.', 'Reads Stoic philosophy in a hoodie that says “chaos.”', 'Journals every night, forgets where the journal is.', 'Drinks herbal tea while plotting world domination via to-do lists.', "Visualizes success while petting the neighbor’s cat."]
+
+    passwords = [
+    'V3locity@2025',
+    'Rise&Sh1ne!',
+    'M1ndful#Flow',
+    'Hydr8!Now99',
+    'Gr8tful$Soul',
+    'ZenMaster_82',
+    'FocusTime!23',
+    'J0urnal$Magic',
+    'StretCh&Win7',
+    'Read&Lead#10'
+]
 
     urls = ['https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg', 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg', 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg', 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg', 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg', 'https://images.pexels.com/photos/834863/pexels-photo-834863.jpeg', 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg', 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg', 'https://images.pexels.com/photos/4519471/pexels-photo-4519471.jpeg', 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg']
 
@@ -19,6 +32,8 @@ with app.app_context():
     users = []
     for n in range(10):
         user = User(username=fake.name(), email=fake.email(), password=fake.password(),url=choice(urls), bio=choice(bios))
+        password = choice(passwords)
+        user.password = password
         db.session.add(user)
         users.append(user)
     db.session.commit()
@@ -35,14 +50,18 @@ with app.app_context():
         ('Stretch in the Morning', 'Start your day with 5 minutes of light stretching to wake up your body.')
     ]
 
-    for name, description in habit_data:
-        habit = Habit(
-            name=name,
-            description=description,
-            frequency=randint(5, 100),
-            user_id=choice(users).id
-        )
-        db.session.add(habit)
+    for user in users:
+      num_habits = randint(1, 3)
+      chosen_habits = sample(habit_data, num_habits)
+      for name, desc in chosen_habits:
+          habit = Habit(
+              name=name,
+              description=desc,
+              frequency=randint(5, 50),
+              user_id=user.id
+          )
+          db.session.add(habit)
+
     db.session.commit()
 
     print('Challenges...')
@@ -54,6 +73,15 @@ with app.app_context():
     ]
     
     db.session.add_all(challenges)
+    db.session.commit()
+
+    print('Participations...')
+    for user in users:
+        joined_challenges = sample(challenges, randint(1, 3))
+        for challenge in joined_challenges:
+            participation = Participation(user_id=user.id, challenge_id=challenge.id)
+            db.session.add(participation)
+
     db.session.commit()
 
     print('Successful')

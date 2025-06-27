@@ -61,6 +61,15 @@ function ProgressLog() {
         </div>
       )}
 
+        <div className="mb-6 text-center">
+          <h2 className="text-xl font-semibold mb-2">😌 Mood Today</h2>
+          <div className="flex justify-center gap-4">
+            {['😄','🙂','😐','😟','😩'].map((emoji) => (
+              <button key={emoji} className="text-3xl hover:scale-110">{emoji}</button>
+            ))}
+          </div>
+        </div>
+
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-semibold mb-4 text-gray-800">
           Your Progress Logs
