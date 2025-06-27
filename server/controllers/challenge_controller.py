@@ -23,7 +23,7 @@ class ChallengeList(Resource):
                     challenges_list.append(challenge_dict)
 
                 return make_response(
-                    jsonify(challenge_dict),
+                    jsonify(challenges_list),
                     200
                 )
             

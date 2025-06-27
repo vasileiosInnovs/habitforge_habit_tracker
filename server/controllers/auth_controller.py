@@ -45,7 +45,7 @@ class SignUp(Resource):
             response_dict = {"message": "Invalid sign up"}
             return make_response(
                 jsonify(response_dict),
-                422
+                409
             )
         
 class CheckSession(Resource):

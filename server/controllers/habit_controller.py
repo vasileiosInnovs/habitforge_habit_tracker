@@ -25,7 +25,7 @@ class HabitList(Resource):
                     habits_list.append(habit_dict)
 
                 return make_response(
-                    jsonify(habit_dict),
+                    jsonify(habits_list),
                     200
                 )
             
@@ -119,6 +119,9 @@ class HabitIndex(Resource):
             )
         
     def patch(self, id):
+        if habit.user_id != session.get('user_id'):
+            return jsonify({'error': 'Unauthorized'}), 403
+        
         habit = Habit.query.get(id)
 
         if not habit:
