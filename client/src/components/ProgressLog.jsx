@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 
 function ProgressLog() {
-    const [logs, setLogs] = useState([]);
-    const [streak, setStreak] = useState(0);
+  const [logs, setLogs] = useState([]);
+  const [streakDates, setStreakDates] = useState([]);
 
-    useEffect(() => {
-        fetch('/logs')
-            .then((res) => {
-                if (res.ok) return res.json();
-                throw new Error("Failed to fetch logs");
-            })
-            .then((data) => {
-                setLogs(data);
-                setStreak(calculateStreak(data));
-            })
-            .catch((err) => console.error(err))
-    }, []);
+  useEffect(() => {
+    fetch('/logs')
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to fetch logs");
+      })
+      .then((data) => {
+        setLogs(data);
+        setStreakDates(calculateStreakDates(data));
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
-    function calculateStreakDates(logs) {
+  function calculateStreakDates(logs) {
     const loggedDates = new Set(
       logs.map((log) => new Date(log.date).toDateString())
     );
@@ -41,17 +41,17 @@ function ProgressLog() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="">
       {streakDates.length > 0 && (
-        <div className="bg-white p-4 rounded shadow-md mb-6 text-center">
-          <h2 className="text-xl font-bold text-green-700 mb-2">
+        <div className="">
+          <h2 className="">
             🔥 {streakDates.length}-Day Streak
           </h2>
-          <div className="flex justify-center gap-1 flex-wrap">
+          <div className="">
             {streakDates.map((date, index) => (
               <div
                 key={index}
-                className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm"
+                className=""
                 title={date}
               >
                 🔥
@@ -61,32 +61,32 @@ function ProgressLog() {
         </div>
       )}
 
-        <div className="mb-6 text-center">
-          <h2 className="text-xl font-semibold mb-2">😌 Mood Today</h2>
-          <div className="flex justify-center gap-4">
-            {['😄','🙂','😐','😟','😩'].map((emoji) => (
-              <button key={emoji} className="text-3xl hover:scale-110">{emoji}</button>
-            ))}
-          </div>
+      <div className="">
+        <h2 className="">😌 Mood Today</h2>
+        <div className="">
+          {['😄','🙂','😐','😟','😩'].map((emoji) => (
+            <button key={emoji} className="" >{emoji}</button>
+          ))}
         </div>
+      </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">
+      <div className="">
+        <h3 className="">
           Your Progress Logs
         </h3>
         {logs.length > 0 ? (
-          <ul className="space-y-3">
+          <ul className="">
             {logs.map((log, index) => (
               <li
                 key={index}
-                className="border-b pb-2 text-sm text-gray-700"
+                className=""
               >
                 ✅ {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500">No progress logs yet.</p>
+          <p className="">No progress logs yet.</p>
         )}
       </div>
     </div>

@@ -15,9 +15,9 @@ function JoinChallengeForm({ challengeId, onJoined }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form">
+        <form onSubmit={handleSubmit} className="" >
             <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Why are you joining?" />
-            <button type="submit">Join Challenge</button>
+            <button type="submit" className="" >Join Challenge</button>
         </form>
     );
 }

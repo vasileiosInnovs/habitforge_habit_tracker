@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -12,8 +12,8 @@ function SignupForm({ onSignup }) {
     });
 
     return (
-        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-4 text-center">Sign Up</h2>
+        <div>
+            <h2>Sign Up</h2>
             <Formik 
                 initialValues={{ username: '', email: '', password: '', image_url: '', bio: '' }}
                 validationSchema={validationSchema}
@@ -30,33 +30,29 @@ function SignupForm({ onSignup }) {
                     });
                 }}
                 >
-                <From className="space-y-4">
+                <Form >
                     <label>Username</label>
                     <Field name="username" className="input" />
-                    <ErrorMessage name="username" components="div" className="text-red-500 text-sm" />
+                    <ErrorMessage name="username" components="div" />
 
                     <label>Email</label>
                     <Field name="email" className="input" />
-                    <ErrorMessage name="email" components="div" className="text-red-500 text-sm" />
+                    <ErrorMessage name="email" components="div" />
 
                     <label>Password</label>
                     <Field name="password" className="input" />
-                    <ErrorMessage name="password" components="div" className="text-red-500 text-sm" />
-
-                    <label>Username</label>
-                    <Field name="username" className="input" />
-                    <ErrorMessage name="username" components="div" className="text-red-500 text-sm" />
+                    <ErrorMessage name="password" components="div" />
 
                     <label>Image URL</label>
                     <Field name="image_url" className="input" />
-                    <ErrorMessage name="image_url" components="div" className="text-red-500 text-sm" />
+                    <ErrorMessage name="image_url" components="div" />
 
                     <label>Bio</label>
                     <Field name="bio" className="input" as="textarea" />
-                    <ErrorMessage name="bio" component="div" className="text-red-500 text-sm"/>
+                    <ErrorMessage name="bio" component="div"/>
 
-                    <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Sign Up</button>
-                </From>
+                    <button type="submit">Sign Up</button>
+                </Form>
             </Formik>
         </div>
         
