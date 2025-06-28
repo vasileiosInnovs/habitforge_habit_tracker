@@ -1,6 +1,6 @@
 
 import './App.css';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -15,19 +15,36 @@ import MyDay from "./components/MyDay";
 import Home from "./components/Home";
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  }
+
+  const handleLogout = () => {
+    fetch("/logout", {method: "DELETE"}).then(() => setUser(null));
+  };
+
+  useEffect(() => {
+    fetch('/check_session').then((res) => {
+      if (res.ok) {
+        res.json().then(setUser)
+      }
+    });
+  }, [])
   
   return (
   <Router>
-    <NavBar />
+    <NavBar user={user} onLogout={handleLogout} />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginForm />} />
+      <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
       <Route path="/signup" element={<SignupForm />} />
 
       <Route
         path="/myday"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <MyDay />
           </ProtectedRoute>
         }
@@ -36,7 +53,7 @@ function App() {
       <Route
         path="/habits"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <HabitForm />
           </ProtectedRoute>
         }
@@ -45,7 +62,7 @@ function App() {
       <Route
         path="/challenges"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <ChallengeForm />
           </ProtectedRoute>
         }
@@ -54,7 +71,7 @@ function App() {
       <Route
         path="/logs"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <ProgressLog />
           </ProtectedRoute>
         }
@@ -63,7 +80,7 @@ function App() {
       <Route
         path="/participations"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <JoinChallengeForm />
           </ProtectedRoute>
         }

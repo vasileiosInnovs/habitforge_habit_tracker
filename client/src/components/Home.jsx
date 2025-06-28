@@ -1,10 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import '../styles/Home.css';
 
 function Home() {
   return (
 
-    <div className="home" >
+    <div className="home home-hero" >
+      <div>
+        <img
+          src="https://cdn.pixabay.com/photo/2015/05/18/23/53/backpacker-772991_1280.jpg"
+          alt="Self Improvement Visual"
+          className="hero-image"
+        />
+      </div>
       <div className="home" >
         
         <h1 >
@@ -28,20 +36,8 @@ function Home() {
           </Link>
         </div>
 
-        <div>
-          <p>
-            Want to explore habits? <Link to="/habits">View Habit Library</Link>
-          </p>
-        </div>
       </div>
 
-      <div>
-        <img
-          src="https://cdn.pixabay.com/photo/2017/08/06/09/59/mountain-2581045_960_720.jpg"
-          alt="Self Improvement Visual"
-          className="hero-image"
-        />
-      </div>
     </div>
   );
 }
