@@ -6,7 +6,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from models import db
+from server.models import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
@@ -19,9 +19,12 @@ db.init_app(app)
 CORS(app)
 api = Api(app)
 
-from controllers.auth_controller import SignUp, Login, Logout, CheckSession
-from controllers.habit_controller import HabitList, HabitIndex
-from controllers.challenge_controller import ChallengeList, ChallengesIndex
+from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession
+from server.controllers.habit_controller import HabitList, HabitIndex
+from server.controllers.challenge_controller import ChallengeList, ChallengesIndex
+from server.controllers.progresslog_controller import ProgressLog, Log
+from server.controllers.participation_controller import ParticipationList, ParticipationIndex
+from server.controllers.user import Profile
 
 api.add_resource(SignUp, '/signup')
 api.add_resource(Login, '/login')
@@ -33,3 +36,11 @@ api.add_resource(HabitIndex, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
+
+api.add_resource(ProgressLog, '/logs')
+api.add_resource(Log, '/log/<int:id>')
+
+api.add_resource(ParticipationList, '/participation')
+api.add_resource(ParticipationIndex, '/participation/<int:id>')
+
+api.add_resource(Profile, '/profile')

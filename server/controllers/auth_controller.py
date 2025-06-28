@@ -2,8 +2,8 @@ from flask import request, session, make_response, jsonify
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
-from models import db, User
-from config import api
+from server.models import db, User
+from server.app import api
 
 class SignUp(Resource):
     def post(self):
@@ -108,8 +108,3 @@ class Logout(Resource):
             response = {"error": "Unauthorized!"}
 
             return make_response(jsonify(response), 401)
-
-api.add_resource(SignUp, '/signup', endpoint='signup')
-api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-api.add_resource(Login, '/login', endpoint='login')
-api.add_resource(Logout, '/logout', endpoint='logout')

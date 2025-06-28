@@ -2,7 +2,8 @@ from flask import request, jsonify, make_response, session
 from flask_restful import Resource
 from datetime import datetime
 
-from models import db, Participation
+from server.models import db, Participation
+from server.app import api
 
 class ParticipationList(Resource):
     def get(self):

@@ -1,9 +1,8 @@
 from flask import jsonify, make_response, request, session
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 
-from models import Challenge, db
-from config import api
+from server.models import Challenge, db
+from server.app import api
 
 class ChallengeList(Resource):
     def get(self):
@@ -141,5 +140,3 @@ class ChallengesIndex(Resource):
                 401
             )
 
-api.add_resource(ChallengeList, '/challenges', endpoint='challenge_list')
-api.add_resource(ChallengesIndex, '/challenges/<int:id>', endpoint='challenge_detail')

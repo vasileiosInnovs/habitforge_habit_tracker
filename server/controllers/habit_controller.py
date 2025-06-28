@@ -1,9 +1,8 @@
 from flask import jsonify, make_response, request, session
 from flask_restful import Resource
 
-from models import db
-from models import Habit
-from config import api
+from server.models import db, Habit
+from server.app import api
 
 class HabitList(Resource):
     def get(self):
@@ -167,5 +166,4 @@ class HabitIndex(Resource):
                 401
             )
 
-api.add_resource(HabitList, '/habits', endpoint='habit_list')
-api.add_resource(HabitIndex, '/habits/<int:id>', endpoint='habit_detail')
+

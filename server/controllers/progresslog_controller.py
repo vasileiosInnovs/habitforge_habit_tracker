@@ -2,8 +2,8 @@ import datetime
 from flask import jsonify, make_response, request, session
 from flask_restful import Resource
 
-from models import ProgressLog, db
-from config import api
+from server.models import ProgressLog, db
+from server.app import api
 
 class ProgressLog(Resource):
     def get(self):
@@ -108,7 +108,7 @@ class Log(Resource):
                 'error': 'Failed to update log'
             }), 500
         
-    def delete(self):
+    def delete(self, id):
         user_id = session.get('user_id')
         if not user_id:
             return jsonify({
@@ -132,5 +132,3 @@ class Log(Resource):
             return jsonify({
                 'error': 'Failed to delete log'
             }), 500
-
-api.add_resource(ProgressLog, '/logs', endpoint='progress_log')
