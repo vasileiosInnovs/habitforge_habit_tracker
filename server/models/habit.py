@@ -7,7 +7,7 @@ class Habit(db.Model, SerializerMixin):
     serialize_rules = ('-user.habits','-progresslogs.habit',)
 
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(), nullable=True, unique=True)
+    name = db.Column(db.String(), nullable=True)
     description = db.Column(db.String(255))
     frequency = db.Column(db.String(), nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))

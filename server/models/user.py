@@ -28,11 +28,11 @@ class User(db.Model, SerializerMixin):
     
     @password.setter
     def password(self, plain_text):
-        from config import bcrypt
+        from server.config import bcrypt
         self._password = bcrypt.generate_password_hash(plain_text)
 
     def check_pass(self, password):
-        from config import bcrypt
+        from server.config import bcrypt
         return bcrypt.check_password_hash(self._password, password)
     
     @validates('email')
