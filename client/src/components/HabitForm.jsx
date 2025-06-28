@@ -37,6 +37,16 @@ function LoginForm({onLogin}) {
         />
         <button type="submit">Login</button>
       </form>
+
+      <div className="list-container">
+        <h3>Need Help Logging In?</h3>
+        <ul>
+          <li>Use your username and password from sign up</li>
+          <li>Password is case-sensitive</li>
+          <li>If you forgot your password, contact support</li>
+          <li>New user? Click "Sign Up" in the navigation</li>
+        </ul>
+      </div>
       </div>
     );
 }
