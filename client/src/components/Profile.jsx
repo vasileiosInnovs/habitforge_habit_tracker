@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Profile.css";
 
-function Profile({ user }) {
-  if (!user) return <p>Loading profile...</p>;
+function Profile() {
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    fetch("/profile")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Not logged in");
+      })
+      .then((data) => setProfile(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  if (!profile) {
+    return <p>Loading profile...</p>;
+  }
 
   return (
     <div className="profile-container">

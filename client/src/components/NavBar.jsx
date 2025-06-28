@@ -18,6 +18,13 @@ function NavBar({ user, onLogout }) {
                     {user && <NavLink to="/habits" onClick={() => setMenuOpen(false)}>Habits</NavLink>}
                     {user && <NavLink to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</NavLink>}
                     {user && <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>}
+                    {user && (
+                      <div className="nav-profile">
+                        <img src={user.image_url || "/placeholder.png"} alt="profile" className="nav-profile-img" />
+                        <span>{user.username}</span>
+                      </div>
+                    )}
+
 
                     {user ? (
                         <div className="auth-buttons">

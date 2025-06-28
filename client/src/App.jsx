@@ -85,6 +85,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/logs"
+        element={
+          <ProtectedRoute user={user}>
+            <ProgressLog />
+          </ProtectedRoute>
+        }
+       />
       
     </Routes>
   </Router>
