@@ -33,12 +33,15 @@ function App() {
       if (res.ok) return res.json();
       throw new Error("Not logged in");
     })
-    .then(user => setUser(user))
-    .catch(err => {
+    .then((user) => {
+      console.log("User from check_session:", user);
+      setUser(user);
+    })
+    .catch((err) => {
       console.error("Session check failed:", err);
       setUser(null);
     });
-}, []);
+  }, []);
 
   return (
     <Router>
