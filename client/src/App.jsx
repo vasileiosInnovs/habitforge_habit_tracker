@@ -29,12 +29,16 @@ function App() {
     fetch(`${process.env.REACT_APP_API_URL}/check_session`, {
       credentials: "include",
     }
-    ).then((res) => {
-      if (res.ok) {
-        res.json().then(setUser);
-      }
+    ).then(res => {
+      if (res.ok) return res.json();
+      throw new Error("Not logged in");
+    })
+    .then(user => setUser(user))
+    .catch(err => {
+      console.error("Session check failed:", err);
+      setUser(null);
     });
-  }, []);
+}, []);
 
   return (
     <Router>
