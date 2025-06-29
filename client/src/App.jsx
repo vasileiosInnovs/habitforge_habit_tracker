@@ -13,6 +13,7 @@ import ChallengeForm from "./components/ChallengeForm";
 import HabitForm from "./components/HabitForm";
 import MyDay from "./components/MyDay";
 import Home from "./components/Home";
+import Profile from "./components/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -93,6 +94,15 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <JoinChallengeForm />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute user={user}>
+              <Profile />
             </ProtectedRoute>
           }
         />

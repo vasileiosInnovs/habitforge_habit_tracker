@@ -17,16 +17,17 @@ function NavBar({ user, onLogout }) {
                 <button className="hamburger" onClick={() => setMenuOpen(prev => !prev)} aria-label="Toggle menu">
                   ☰
                 </button>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
 
                 {user && (
                   <>
-                    <NavLink to="/myday">My Day</NavLink>
-                    <NavLink to="/habits">Habits</NavLink>
-                    <NavLink to="/challenges">Challenges</NavLink>
-                    <NavLink to="/logs">Progress Logs</NavLink>
+                    <NavLink to="/myday" onClick={() => setMenuOpen(false)}>My Day</NavLink>
+                    <NavLink to="/habits" onClick={() => setMenuOpen(false)}>Habits</NavLink>
+                    <NavLink to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</NavLink>
+                    <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>
                 
                     <div className="nav-profile">
+                      <NavLink to="/profile" onClick={() => setMenuOpen(false)}></NavLink>
                       <img
                         src={user["image URL"] || "/placeholder.png"}
                         alt="profile"
@@ -45,8 +46,8 @@ function NavBar({ user, onLogout }) {
                   </div>
                 ) : (
                   <>
-                    <NavLink to="/login">Login</NavLink>
-                    <NavLink to="/signup">Sign Up</NavLink>
+                    <NavLink to="/login" onClick={() => setMenuOpen(false)}>Login</NavLink>
+                    <NavLink to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</NavLink>
                   </>
                 )}
             </div>
