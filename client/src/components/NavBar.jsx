@@ -17,34 +17,39 @@ function NavBar({ user, onLogout }) {
                 <button className="hamburger" onClick={() => setMenuOpen(prev => !prev)} aria-label="Toggle menu">
                   ☰
                 </button>
-                <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-                    <NavLink to="/">Home</NavLink>
+                <NavLink to="/">Home</NavLink>
+
+                {user && (
+                  <>
                     <NavLink to="/myday">My Day</NavLink>
                     <NavLink to="/habits">Habits</NavLink>
                     <NavLink to="/challenges">Challenges</NavLink>
                     <NavLink to="/logs">Progress Logs</NavLink>
-                    (
-                      <div className="nav-profile">
-                        {/* <img src={user.image_url} alt="profile" className="nav-profile-img" /> */}
-                        <span>{user.username}</span>
-                      </div>
-                    )
+                
+                    <div className="nav-profile">
+                      <img
+                        src={user["image URL"] || "/placeholder.png"}
+                        alt="profile"
+                        className="nav-profile-img"
+                      />
+                      <span>{user.username}</span>
+                    </div>
+                  </>
+                )}
 
 
-                    {user ? (
-                        <div className="auth-buttons">
-                            <span className="user-greeting">{user.username}</span>
-                            <button className='logout-btn' onClick={onLogout}>Logout</button>
-                        </div>
-                        ) : (
-                        <>
-                            <NavLink to="/login">Login</NavLink>
-                            <NavLink to="/signup">Sign Up</NavLink>
-                        </>
-                        )}
-                </div>
+                {user ? (
+                  <div className="auth-buttons">
+                    <span className="user-greeting">{user.username}</span>
+                    <button className="logout-btn" onClick={onLogout}>Logout</button>
+                  </div>
+                ) : (
+                  <>
+                    <NavLink to="/login">Login</NavLink>
+                    <NavLink to="/signup">Sign Up</NavLink>
+                  </>
+                )}
             </div>
-
         </nav>
     )
 }
