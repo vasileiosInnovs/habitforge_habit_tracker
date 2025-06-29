@@ -15,6 +15,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get('THE_SECRET_KEY')
 app.json.compact = False
 
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
+
 migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)

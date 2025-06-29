@@ -25,7 +25,7 @@ function NavBar({ user, onLogout }) {
                     {user && <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>}
                     {user && (
                       <div className="nav-profile">
-                        <img src={user.image_url || "/placeholder.png"} alt="profile" className="nav-profile-img" />
+                        <img src={user.image_url} alt="profile" className="nav-profile-img" />
                         <span>{user.username}</span>
                       </div>
                     )}
