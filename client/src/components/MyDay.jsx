@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function MyDay() {
   const [habits, setHabits] = useState([]);
-   const [streak, setStreak] = useState(0);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
       fetch(`${process.env.REACT_APP_API_URL}/habits`, {
@@ -10,8 +10,8 @@ function MyDay() {
         credentials: "include",
       })
         .then((res) => {
-      if (!res.ok) throw new Error("Unauthorized");
-      return res.json();
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
     })
       .then((data) => {
         if (Array.isArray(data)) {
@@ -44,16 +44,16 @@ function MyDay() {
   };
 
   return (
-    <div>
+    <div className="myday">
       <h1>🌞 My Day</h1>
 
-      <p>
+      <p className="habit-summary">
         {streak} habit{streak !== 1 ? 's' : ''} completed today 🎉
       </p>
 
-      <div>
+      <div className="streak-container">
         <h2>🔥 Streak</h2>
-        <div>
+        <div className="streak">
           {Array(streak)
             .fill()
             .map((_, index) => (
@@ -63,23 +63,23 @@ function MyDay() {
         </div>
       </div>
 
-      <div>
+      <div className="habits-section">
         <h2> Today’s Habits</h2>
         {habits.length === 0 ? (
-          <p>You have no habits for today.</p>
+          <p className="no-habits">You have no habits for today.</p>
         ) : (
-          <ul>
+          <ul className="habit-list">
             {habits.map((habit) => (
               <li
                 key={habit.id}
                 className="flex justify-between items-center bg-white p-3 rounded shadow"
               >
-                <div>
+                <div className="habit-info">
                   <h3>{habit.name}</h3>
                   <p >{habit.description}</p>
                 </div>
                 <button
-                  onClick={() => handleLog(habit.id)}
+                   className="mark-btn" onClick={() => handleLog(habit.id)}
                 >
                   Mark as Done
                 </button>

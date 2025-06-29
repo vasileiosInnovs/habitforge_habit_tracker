@@ -5,6 +5,8 @@ import '../styles/NavBar.css'
 function NavBar({ user, onLogout }) {
     const [menuOpen, setMenuOpen] = useState(false);
 
+    console.log("NavBar user prop:", user);
+
     return (
         <nav className="navbar">
             <div className="navbar-container">
