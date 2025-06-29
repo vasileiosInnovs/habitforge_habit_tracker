@@ -38,8 +38,8 @@ function App() {
     <NavBar user={user} onLogout={handleLogout} />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
-      <Route path="/signup" element={<SignupForm />} />
+      <Route path="/login" element={currentUser ? <MyDay user={currentUser} /> : <Navigate to="/login" />} />
+      <Route path="/signup" element={<SignupForm onSignup={setCurrentUser} />} />
 
       <Route
         path="/myday"

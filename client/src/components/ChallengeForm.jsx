@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import '../styles/Buttons.css';
 
 function ChallengeForm({ onChallengeCreated }) {
     const [formData, setFormData] = useState({ title: '', description: '', start_date: '', end_date: '' });
