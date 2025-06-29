@@ -1,7 +1,7 @@
-from server.app import app
+from server.app import app, bcrypt
 from server.models import *
 from faker import Faker
-from random import choice, randint, random, sample
+from random import choice, randint, sample
 
 with app.app_context():
     fake = Faker()
@@ -19,7 +19,7 @@ with app.app_context():
     'J0urnal$Magic',
     'StretCh&Win7',
     'Read&Lead#10'
-]
+    ]
 
     urls = ['https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg', 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg', 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg', 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg', 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg', 'https://images.pexels.com/photos/834863/pexels-photo-834863.jpeg', 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg', 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg', 'https://images.pexels.com/photos/4519471/pexels-photo-4519471.jpeg', 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg']
 
@@ -31,8 +31,8 @@ with app.app_context():
     print('Users...')
     users = []
     for n in range(10):
-        user = User(username=fake.name(), email=fake.email(),image_url=choice(urls), bio=choice(bios))
         password_sec = choice(passwords)
+        user = User(username=fake.name(), email=fake.email(),image_url=choice(urls), bio=choice(bios))
         user.password = password_sec
         db.session.add(user)
         users.append(user)

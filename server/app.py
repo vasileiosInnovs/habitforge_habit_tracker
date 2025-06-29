@@ -5,16 +5,19 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 
 from server.models import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.environ.get('THE_SECRET_KEY')
 app.json.compact = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
+bcrypt = Bcrypt(app)
 
 CORS(app, supports_credentials=True, origins=["https://habitforge.onrender.com"])
 api = Api(app)
