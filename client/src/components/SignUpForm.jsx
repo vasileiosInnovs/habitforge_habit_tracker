@@ -48,6 +48,7 @@ function SignupForm({ onSignup }) {
             })
             .catch((err) => {
               console.error("Signup error:", err);
+              toast.error(err.message || "Signup failed.");
               setErrors({ submit: err.message });
             })
             .finally(() => setSubmitting(false));

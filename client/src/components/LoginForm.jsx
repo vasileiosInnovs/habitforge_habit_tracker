@@ -16,9 +16,14 @@ function LoginForm({ onLogin }) {
               if (!res.ok) throw new Error("Login failed");
               return res.json();
             })
-            .then(onLogin)
-            .catch(err => console.error("Login error:", err));
-            
+            .then((user) => {
+              onLogin(user);
+              toast.success("Login successful!"); 
+            })
+            .catch((err) => {
+              console.error("Login error:", err);
+              toast.error("Login failed. Check your credentials."); 
+            });
     };
 
     return (
