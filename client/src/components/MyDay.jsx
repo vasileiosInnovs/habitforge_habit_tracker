@@ -5,11 +5,26 @@ function MyDay() {
    const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-      fetch(`${process.env.REACT_APP_API_URL}/habits`)
-        .then((res) => res.json())
-        .then((data) => setHabits(data))
-        .catch((err) => console.error("Failed to fetch habits", err));
-    }, []);
+      fetch(`${process.env.REACT_APP_API_URL}/habits`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((res) => {
+      if (!res.ok) throw new Error("Unauthorized");
+      return res.json();
+    })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setHabits(data);
+        } else {
+          setHabits([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching habits:", err);
+        setHabits([]);
+      });
+  }, []);
 
   const handleLog = (habitId) => {
     fetch(`${process.env.REACT_APP_API_URL}/logs`, {
