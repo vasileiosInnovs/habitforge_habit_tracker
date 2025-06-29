@@ -43,7 +43,7 @@ function SignupForm({ onSignup }) {
             .then((user) => {
               onSignup(user);
               toast.success("Signup successful!");
-              navigate("/myday");
+              navigate(`${process.env.REACT_APP_API_URL}/myday`);
               resetForm();
             })
             .catch((err) => {
