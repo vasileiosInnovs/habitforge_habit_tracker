@@ -1,11 +1,7 @@
-
-
 .navbar {
-  background-color: #66ff00;
-  background: linear-gradient(#66ff00, #f0fff4);
-  color: rgb(23, 23, 23);
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
   padding: 1rem 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -21,8 +17,9 @@
 }
 
 .navbar-logo {
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2f855a;
 }
 
 .hamburger {
@@ -30,7 +27,7 @@
   background: none;
   border: none;
   font-size: 2rem;
-  color: white;
+  color: #2d3748;
   cursor: pointer;
 }
 
@@ -38,35 +35,29 @@
   display: flex;
   gap: 1rem;
   align-items: center;
-  transition: max-height 0.3s ease-out;
 }
 
 .nav-links a,
 .nav-links button {
-  color: rgb(23, 23, 23);
-  text-decoration: none;
-  font-size: 1rem;
+  color: #2d3748;
   background: none;
   border: none;
-  cursor: pointer;
   padding: 0.5rem 0.75rem;
-  transition: background 0.2s;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
 .nav-links a:hover,
 .nav-links button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background-color: #edf2f7;
 }
 
 .logout-btn {
   background-color: #e53e3e;
   color: white;
+  border-radius: 4px;
   padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 4px;
-  margin-left: 0.5rem;
-  cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
@@ -82,9 +73,8 @@
 .user-greeting {
   font-size: 0.9rem;
   margin-right: 0.5rem;
-  color: #f0fff4;
+  color: #718096;
 }
-
 
 @media (max-width: 768px) {
   .hamburger {
@@ -96,9 +86,8 @@
     width: 100%;
     max-height: 0;
     overflow: hidden;
-    background-color: #2f855a;
     margin-top: 1rem;
-    transition: max-height 0.4s ease;
+    transition: max-height 0.3s ease;
   }
 
   .nav-links.open {

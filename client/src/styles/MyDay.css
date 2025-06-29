@@ -5,10 +5,10 @@
 .streak {
   display: flex;
   justify-content: center;
+  gap: 0.5rem;
   margin: 1rem 0;
 }
 
 .streak span {
-  font-size: 1.5rem;
-  margin: 0 3px;
+  font-size: 1.3rem;
 }

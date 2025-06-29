@@ -1,21 +1,22 @@
 .home {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
 }
 
 .home h2 {
-  font-size: 2rem;
+  font-size: 2.25rem;
   margin-bottom: 1rem;
   color: #2d3748;
 }
 
 .home p {
-  font-size: 1.2rem;
-  color: black;
-  max-width: 800px;
+  font-size: 1.1rem;
+  color: #4a5568;
+  max-width: 700px;
   margin: 0 auto;
 }
 
+/* Hero Image */
 .hero-image {
   width: 100%;
   max-height: 300px;
@@ -24,38 +25,12 @@
   margin-top: 2rem;
 }
 
-
 .home-hero {
-  /* background: url('https://cdn.pixabay.com/photo/2025/06/19/16/21/adventure-9669330_1280.jpg') no-repeat center center/cover; */
   height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
   font-size: 2rem;
-  font-weight: bold;
-}
-
-button {
-  background-color: #66ff00;
-  color: rgb(255, 255, 255);
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin: 10px;
-}
-
-button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
-}
-
-button:active {
-  background-color: #3e8e41;
-  transform: scale(0.98);
+  font-weight: 600;
+  color: #2d3748;
 }
