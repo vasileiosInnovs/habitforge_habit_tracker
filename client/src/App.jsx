@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import ProtectedRoute from './components/ProtectedRoute';
 import NavBar from './components/NavBar';

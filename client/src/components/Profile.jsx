@@ -24,13 +24,13 @@ function Profile() {
     <div className="profile-container">
       <div className="profile-card">
         <img
-          src={user.image_url}
+          src={profile.image_url}
           alt="Profile"
           className="profile-avatar"
         />
-        <h2 className="profile-username">@{user.username}</h2>
-        <p className="profile-email">{user.email}</p>
-        <p className="profile-bio">"{user.bio || "You are your only limit."}"</p>
+        <h2 className="profile-username">@{profile.username}</h2>
+        <p className="profile-email">{profile.email}</p>
+        <p className="profile-bio">"{profile.bio || "You are your only limit."}"</p>
 
         <div className="motivational-section">
           <h4>🌱 Keep growing</h4>

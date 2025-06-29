@@ -24,10 +24,10 @@ function ChallengeForm({ onChallengeCreated }) {
 
         return (
             <form onSubmit={handleSubmit} className="form">
-                <input name="title" value={formData.title} onChange={handleChange} placeholder="Challenge Title"  className=""/>
+                <input name="title" type="text" value={formData.title} onChange={handleChange} placeholder="Challenge Title"  className=""/>
                 <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description"/>
-                <input name="start_date" value={formData.start_date} onChange={handleChange}  className=""/>
-                <input name="end_date" value={formData.end_date} onChange={handleChange}  className=""/>
+                <input name="start_date" type="date" value={formData.start_date} onChange={handleChange}  className=""/>
+                <input name="end_date" type="date" value={formData.end_date} onChange={handleChange}  className=""/>
                 <button type="submit" className="">Add Challenge</button>
             </form>
         );

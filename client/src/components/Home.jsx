@@ -24,12 +24,12 @@ function Home() {
         </p>
 
         <div>
-          <Link to={`${process.env.REACT_APP_API_URL}/signup`}>
+          <Link to={"/signup"}>
             <button>
               Start Your Journey
             </button>
           </Link>
-          <Link to={`${process.env.REACT_APP_API_URL}/login`}>
+          <Link to={"/login"}>
             <button>
               Already Have an Account
             </button>

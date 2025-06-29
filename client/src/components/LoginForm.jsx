@@ -12,8 +12,13 @@ function LoginForm({ onLogin }) {
             credentials: "include",
             body: JSON.stringify(formData)
         })
-            .then((r) => r.json())
+            .then(res => {
+              if (!res.ok) throw new Error("Login failed");
+              return res.json();
+            })
             .then(onLogin)
+            .catch(err => console.error("Login error:", err));
+            
     };
 
     return (
