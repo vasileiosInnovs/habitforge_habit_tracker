@@ -110,3 +110,16 @@
   font-weight: 600;
   color: #2f855a;
 }
+.nav-profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+}
+.nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
