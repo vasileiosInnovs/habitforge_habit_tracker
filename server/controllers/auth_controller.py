@@ -53,23 +53,17 @@ class SignUp(Resource):
         
 class CheckSession(Resource):
     def get(self):
-        user_id = session.get('user_id')
-
+        user_id = session.get("user_id")
         if user_id:
-            user = User.query.filter(User.id == user_id).first()
-
+            user = User.query.get(user_id)
             if user:
-                user_dict = {
-                    'id': user.id,
-                    'username': user.username,
-                    'image_url': user.image_url,
-                    'bio': user.bio
-                }
-                return make_response(jsonify(user_dict), 200)
-            else:
-                return {'message': 'User not found'}, 404
-        else:
-            return {'message': '401: Not Authorized'}, 401
+                return {
+                    "username": user.username,
+                    "image URL": user.image_url,
+                    "bio": user.bio
+                }, 200
+        return {"error": "Not logged in"}, 401
+
 
 class Login(Resource):
     def post(self):

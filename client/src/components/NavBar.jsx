@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import '../styles/NavBar.css'
+import '../styles/NavBar.css';
 
 function NavBar({ user, onLogout }) {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -18,11 +18,11 @@ function NavBar({ user, onLogout }) {
                   ☰
                 </button>
                 <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-                    <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-                    {user && <NavLink to="/myday" onClick={() => setMenuOpen(false)}>My Day</NavLink>}
-                    {user && <NavLink to="/habits" onClick={() => setMenuOpen(false)}>Habits</NavLink>}
-                    {user && <NavLink to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</NavLink>}
-                    {user && <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>}
+                    <NavLink to="/">Home</NavLink>
+                    {user && <NavLink to="/myday">My Day</NavLink>}
+                    {user && <NavLink to="/habits">Habits</NavLink>}
+                    {user && <NavLink to="/challenges">Challenges</NavLink>}
+                    {user && <NavLink to="/logs">Progress Logs</NavLink>}
                     {user && (
                       <div className="nav-profile">
                         <img src={user.image_url} alt="profile" className="nav-profile-img" />
@@ -38,8 +38,8 @@ function NavBar({ user, onLogout }) {
                         </div>
                         ) : (
                         <>
-                            {!user && <NavLink to="/login" onClick={() => setMenuOpen(false)}>Login</NavLink>}
-                            {!user && <NavLink to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</NavLink>}
+                            {!user && <NavLink to="/login">Login</NavLink>}
+                            {!user && <NavLink to="/signup">Sign Up</NavLink>}
                         </>
                         )}
                 </div>
