@@ -26,7 +26,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('/check_session').then((res) => {
+    fetch(`${process.env.REACT_APP_API_URL}/check_session`).then((res) => {
       if (res.ok) {
         res.json().then(setUser);
       }
