@@ -17,9 +17,12 @@ class SignUp(Resource):
            bio = data.get('bio')
 
            if not username or not password or not email:
-                return {
-                     'error': 'Username, password and email are required.'
-                }
+               return {
+                    'error': 'Username, password and email are required.'
+               }
+           
+           if User.query.filter_by(email=email).first():
+                return {"error": "Email already exists."}, 400
            
            new_user = User(
                username=username,
