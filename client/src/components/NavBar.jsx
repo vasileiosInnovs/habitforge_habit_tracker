@@ -19,11 +19,11 @@ function NavBar({ user, onLogout }) {
                 </button>
                 <div className={`nav-links ${menuOpen ? "open" : ""}`}>
                     <NavLink to="/">Home</NavLink>
-                    {user && <NavLink to="/myday">My Day</NavLink>}
-                    {user && <NavLink to="/habits">Habits</NavLink>}
-                    {user && <NavLink to="/challenges">Challenges</NavLink>}
-                    {user && <NavLink to="/logs">Progress Logs</NavLink>}
-                    {user && (
+                    {<NavLink to="/myday">My Day</NavLink>}
+                    {<NavLink to="/habits">Habits</NavLink>}
+                    {<NavLink to="/challenges">Challenges</NavLink>}
+                    {<NavLink to="/logs">Progress Logs</NavLink>}
+                    {(
                       <div className="nav-profile">
                         <img src={user.image_url} alt="profile" className="nav-profile-img" />
                         <span>{user.username}</span>
@@ -38,8 +38,8 @@ function NavBar({ user, onLogout }) {
                         </div>
                         ) : (
                         <>
-                            {!user && <NavLink to="/login">Login</NavLink>}
-                            {!user && <NavLink to="/signup">Sign Up</NavLink>}
+                            {<NavLink to="/login">Login</NavLink>}
+                            {<NavLink to="/signup">Sign Up</NavLink>}
                         </>
                         )}
                 </div>
