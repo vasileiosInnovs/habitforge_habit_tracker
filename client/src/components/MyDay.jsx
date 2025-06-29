@@ -5,7 +5,7 @@ function MyDay() {
    const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-      fetch("/habits")
+      fetch(`${process.env.REACT_APP_API_URL}/habits`)
         .then((res) => res.json())
         .then((data) => setHabits(data))
         .catch((err) => console.error("Failed to fetch habits", err));

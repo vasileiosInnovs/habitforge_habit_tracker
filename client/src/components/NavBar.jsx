@@ -16,11 +16,11 @@ function NavBar({ user, onLogout }) {
                   ☰
                 </button>
                 <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-                    <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-                    {user && <NavLink to="/myday" onClick={() => setMenuOpen(false)}>My Day</NavLink>}
-                    {user && <NavLink to="/habits" onClick={() => setMenuOpen(false)}>Habits</NavLink>}
-                    {user && <NavLink to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</NavLink>}
-                    {user && <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>}
+                    <NavLink to={`${process.env.REACT_APP_API_URL}/`} onClick={() => setMenuOpen(false)}>Home</NavLink>
+                    {user && <NavLink to={`${process.env.REACT_APP_API_URL}/myday`} onClick={() => setMenuOpen(false)}>My Day</NavLink>}
+                    {user && <NavLink to={`${process.env.REACT_APP_API_URL}/habits`} onClick={() => setMenuOpen(false)}>Habits</NavLink>}
+                    {user && <NavLink to={`${process.env.REACT_APP_API_URL}/challenges`} onClick={() => setMenuOpen(false)}>Challenges</NavLink>}
+                    {user && <NavLink to={`${process.env.REACT_APP_API_URL}/logs`} onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>}
                     {user && (
                       <div className="nav-profile">
                         <img src={user.image_url || "/placeholder.png"} alt="profile" className="nav-profile-img" />
@@ -36,8 +36,8 @@ function NavBar({ user, onLogout }) {
                         </div>
                         ) : (
                         <>
-                            {!user && <NavLink to="/login" onClick={() => setMenuOpen(false)}>Login</NavLink>}
-                            {!user && <NavLink to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</NavLink>}
+                            {!user && <NavLink to={`${process.env.REACT_APP_API_URL}/login`} onClick={() => setMenuOpen(false)}>Login</NavLink>}
+                            {!user && <NavLink to={`${process.env.REACT_APP_API_URL}/signup`} onClick={() => setMenuOpen(false)}>Sign Up</NavLink>}
                         </>
                         )}
                 </div>
