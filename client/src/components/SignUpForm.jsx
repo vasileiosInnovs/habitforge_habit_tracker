@@ -27,7 +27,7 @@ function SignupForm({ onSignup }) {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
-          fetch("https://habitforge-habit-tracker.onrender.com/signup", {
+          fetch(`${process.env.REACT_APP_API_URL}/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

@@ -5,7 +5,7 @@ function JoinChallengeForm({ challengeId, onJoined }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('https://habitforge-habit-tracker.onrender.com/participations', {
+        fetch(`${process.env.REACT_APP_API_URL}/participations`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: "include",

@@ -5,7 +5,7 @@ function ProgressLog() {
   const [streakDates, setStreakDates] = useState([]);
 
   useEffect(() => {
-    fetch('https://habitforge-habit-tracker.onrender.com/logs')
+    fetch(`${process.env.REACT_APP_API_URL}/logs`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch logs");

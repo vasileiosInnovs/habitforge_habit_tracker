@@ -12,7 +12,7 @@ function MyDay() {
     }, []);
 
   const handleLog = (habitId) => {
-    fetch(`https://habitforge-habit-tracker.onrender.com/logs`, {
+    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -5,7 +5,9 @@ function Profile() {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    fetch("https://habitforge-habit-tracker.onrender.com/profile")
+    fetch(`${process.env.REACT_APP_API_URL}/profile`, {
+      credentials: "include",
+    })
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Not logged in");
