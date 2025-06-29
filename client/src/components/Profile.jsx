@@ -5,7 +5,7 @@ function Profile() {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    fetch("/profile")
+    fetch("https://habitforge-habit-tracker.onrender.com/profile")
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Not logged in");

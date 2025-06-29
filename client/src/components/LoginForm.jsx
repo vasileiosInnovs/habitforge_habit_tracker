@@ -6,7 +6,7 @@ function LoginForm({ onLogin }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('/login', {
+        fetch('https://habitforge-habit-tracker.onrender.com/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)

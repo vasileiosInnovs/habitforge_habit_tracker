@@ -26,10 +26,10 @@ function SignupForm({ onSignup }) {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm, setErrors }) => {
-          fetch("/signup", {
+          fetch("https://habitforge-habit-tracker.onrender.com/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include", // if using session cookies
+            credentials: "include",
             body: JSON.stringify(values),
           })
             .then((res) => {
@@ -37,13 +37,14 @@ function SignupForm({ onSignup }) {
               return res.json();
             })
             .then((user) => {
-              onSignup(user);      // Save user to state
-              navigate("/myday");  // Redirect
+              onSignup(user);
+              navigate("/myday");  
             })
-            .catch((err) => {
-              setErrors({ submit: err.message });
-            })
-            .finally(() => setSubmitting(false));
+          .catch(async (err) => {
+            const errorData = await err.response?.json?.();
+            console.error("Signup error:", err, errorData);
+            setErrors({ submit: errorData?.error || err.message });
+          });
         }}
       >
         {({ isSubmitting, errors }) => (

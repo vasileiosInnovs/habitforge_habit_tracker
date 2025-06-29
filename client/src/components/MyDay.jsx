@@ -12,7 +12,7 @@ function MyDay() {
     }, []);
 
   const handleLog = (habitId) => {
-    fetch(`/logs`, {
+    fetch(`https://habitforge-habit-tracker.onrender.com/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
