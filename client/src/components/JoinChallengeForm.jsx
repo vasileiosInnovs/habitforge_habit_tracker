@@ -8,6 +8,7 @@ function JoinChallengeForm({ challengeId, onJoined }) {
         fetch('https://habitforge-habit-tracker.onrender.com/participations', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            credentials: "include",
             body: JSON.stringify({ challenge_id: challengeId, reason_for_joining: note, personal_goal:note })
         })
             .then((r) => r.json())

@@ -9,6 +9,7 @@ function LoginForm({ onLogin }) {
         fetch('https://habitforge-habit-tracker.onrender.com/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            credentials: "include",
             body: JSON.stringify(formData)
         })
             .then((r) => r.json())

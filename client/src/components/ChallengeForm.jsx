@@ -14,6 +14,7 @@ function ChallengeForm({ onChallengeCreated }) {
         fetch('https://habitforge-habit-tracker.onrender.com/challenges', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            credentials: "include",
             body: JSON.stringify(formData)
         })
             .then((r) => r.json())

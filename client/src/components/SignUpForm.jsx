@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function SignupForm({ onSignup }) {
   const navigate = useNavigate();
@@ -32,19 +33,24 @@ function SignupForm({ onSignup }) {
             credentials: "include",
             body: JSON.stringify(values),
           })
-            .then((res) => {
-              if (!res.ok) throw new Error("Signup failed");
+            .then(async (res) => {
+              if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Signup failed");
+              }
               return res.json();
             })
             .then((user) => {
               onSignup(user);
-              navigate("/myday");  
+              toast.success("Signup successful!");
+              navigate("/myday");
+              resetForm();
             })
-          .catch(async (err) => {
-            const errorData = await err.response?.json?.();
-            console.error("Signup error:", err, errorData);
-            setErrors({ submit: errorData?.error || err.message });
-          });
+            .catch((err) => {
+              console.error("Signup error:", err);
+              setErrors({ submit: err.message });
+            })
+            .finally(() => setSubmitting(false));
         }}
       >
         {({ isSubmitting, errors }) => (

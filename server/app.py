@@ -16,7 +16,7 @@ app.json.compact = False
 migrate = Migrate(app, db)
 db.init_app(app)
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["https://habitforge-habit-tracker.onrender.com"])
 api = Api(app)
 
 from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession

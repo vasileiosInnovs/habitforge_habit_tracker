@@ -17,6 +17,7 @@ function MyDay() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ habit_id: habitId }),
     })
       .then((res) => {
