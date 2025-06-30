@@ -64,7 +64,7 @@ class HabitIndex(Resource):
 
         habit = Habit.query.get(id)
         if habit and habit.user_id == user_id:
-            return make_response(jsonify(habit.to_dict()), 200)
+            return habit.to_dict(), 200
         else:
             return make_response(jsonify({"error": "Habit not found"}), 404)
 

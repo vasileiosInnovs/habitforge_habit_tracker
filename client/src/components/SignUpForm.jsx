@@ -35,11 +35,16 @@ function SignupForm({ onSignup }) {
             body: JSON.stringify(values),
           })
             .then(async (res) => {
+              console.log("Signup response status:", res.status);
+              const contentType = res.headers.get("Content-Type");
+              const isJson = contentType && contentType.includes("application/json");
+
               if (!res.ok) {
-                const error = await res.json();
+                const error = isJson ? await res.json() : { error: "Signup failed." };
                 throw new Error(error.error || "Signup failed.");
               }
-              return res.json();
+            
+              return isJson ? res.json() : {};
             })
             .then((user) => {
               onSignup(user);
