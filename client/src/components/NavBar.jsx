@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import {  useNavigate, NavLink } from "react-router-dom";
 import '../styles/NavBar.css';
-import { useNavigate, NavLink } from "react-router-dom";
 
 
 function NavBar({ user, onLogout }) {
     const [menuOpen, setMenuOpen] = useState(false);
-    const navigate = useNavigate(); // ← useNavigate hook
+    const navigate = useNavigate(); 
 
   const handleLogout = () => {
     fetch(`${process.env.REACT_APP_API_URL}/logout`, {
