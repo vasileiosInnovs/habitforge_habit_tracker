@@ -101,18 +101,31 @@ function HabitForm() {
   };
 
   const toggleCompletion = (habit) => {
-    const updated = { ...habit, completed: !habit.completed };
-    fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ completed: updated.completed }),
-    }).then((res) => {
-      if (res.ok) {
-        setHabits(habits.map((h) => (h.id === habit.id ? updated : h)));
-      }
+  const updatedCompleted = !habit.completed;
+
+  fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ completed: updatedCompleted }),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to update habit status");
+      return res.json();
+    })
+    .then((updatedHabit) => {
+      setHabits((prevHabits) =>
+        prevHabits.map((h) => (h.id === habit.id ? updatedHabit : h))
+      );
+      toast.success(
+        updatedHabit.completed ? "Marked as complete!" : "Marked as incomplete"
+      );
+    })
+    .catch((err) => {
+      console.error("Toggle failed:", err);
+      toast.error("Could not update habit");
     });
-  };
+};
 
   return (
     <div className="habit-section">
@@ -165,11 +178,14 @@ function HabitForm() {
               <div className="habit-buttons">
                 <button
                   className="mark-btn"
-                  style={{ backgroundColor: habit.completed ? "#48bb78" : "#6ab04c" }}
+                  style={{
+                    backgroundColor: habit.completed ? "#48bb78" : "#6ab04c",
+                  }}
                   onClick={() => toggleCompletion(habit)}
                 >
                   {habit.completed ? "Completed" : "Mark Done"}
                 </button>
+              
                 <button
                   className="mark-btn delete-btn"
                   onClick={() => handleDelete(habit.id)}

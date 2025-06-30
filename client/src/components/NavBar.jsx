@@ -19,7 +19,10 @@ function NavBar({ user, onLogout }) {
               <button className="hamburger" onClick={() => setMenuOpen(prev => !prev)} aria-label="Toggle menu">
                   ☰
                 </button>
-                <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
+                <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+                {!user && (
+                  <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
+                )}
 
                 {user && (
                   <>
@@ -29,21 +32,19 @@ function NavBar({ user, onLogout }) {
                     <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>
                 
                     <div className="nav-profile">
-                      <NavLink to={"/profile"} onClick={() => setMenuOpen(false)}></NavLink>
-                      <img
-                        src={user["image URL"] || "/placeholder.png"}
-                        alt="profile"
-                        className="nav-profile-img"
-                      />
-                      <span>{user.username}</span>
+                      <NavLink to="/profile" onClick={() => setMenuOpen(false)} className="nav-profile">
+                        <img
+                          src={user.image_url || "/placeholder.png"}
+                          alt="profile"
+                          className="nav-profile-img"
+                        />
+                        <span>{user.username}</span>
+                      </NavLink>
                     </div>
                   </>
                 )}
-
-
                 {user ? (
                   <div className="auth-buttons">
-                    <span className="user-greeting">{user.username}</span>
                     <button className="logout-btn" onClick={onLogout}>Logout</button>
                   </div>
                 ) : (
@@ -52,6 +53,7 @@ function NavBar({ user, onLogout }) {
                     <NavLink to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</NavLink>
                   </>
                 )}
+                </div>
             </div>
         </nav>
     )

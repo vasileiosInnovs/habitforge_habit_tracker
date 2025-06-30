@@ -16,11 +16,18 @@ function ChallengeForm({ onChallengeCreated = () => {} }) {
   const initialValues = {
     title: '',
     description: '',
-    start_date: '',
-    end_date: ''
+    start_date: Yup.string().required("Start date is required"),
+    end_date: Yup.string()
+        .nullable()
+        .test('is-after-start', 'End date must be after start date', function (value) {
+            const { start_date } = this.parent;
+            return !value || new Date(value) >= new Date(start_date);
+  }),
+
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
+    console.log("Submitting challenge:", values);
     fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

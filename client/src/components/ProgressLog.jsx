@@ -7,27 +7,26 @@ function ProgressLog() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-  const handleRefresh = () => setRefreshKey((prev) => prev + 1);
-  window.addEventListener("refreshLogs", handleRefresh);
-  return () => window.removeEventListener("refreshLogs", handleRefresh);
-}, []);
+    const handleRefresh = () => setRefreshKey((prev) => prev + 1);
+    window.addEventListener("refreshLogs", handleRefresh);
+    return () => window.removeEventListener("refreshLogs", handleRefresh);
+  }, []);
 
-useEffect(() => {
-  fetch(`${process.env.REACT_APP_API_URL}/logs`, {
-    credentials: "include",
-  })
-    .then((res) => res.ok ? res.json() : [])
-    .then((data) => {
-      setLogs(data);
-      setStreakDates(calculateStreakDates(data));
-    });
-}, [refreshKey]);
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+      credentials: "include",
+    })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        setLogs(data);
+        setStreakDates(calculateStreakDates(data));
+      });
+  }, [refreshKey]);
 
   function calculateStreakDates(logs) {
     const loggedDates = new Set(
       logs.map((log) => new Date(log.date).toDateString())
     );
-
     const streak = [];
     const today = new Date();
 
@@ -46,32 +45,79 @@ useEffect(() => {
     return streak;
   }
 
-    function groupLogsByHabit(logs) {
-    const map = {};
+  function groupLogsByType(logs) {
+    const byHabit = {};
+    const byChallenge = {};
+
     for (let log of logs) {
-      const habitName = log.name || "Unknown Habit";
-      if (!map[habitName]) map[habitName] = [];
-      map[habitName].push(log);
+      if (log.habit_id) {
+        const key = log.name || "Unnamed Habit";
+        if (!byHabit[key]) byHabit[key] = [];
+        byHabit[key].push(log);
+      } else if (log.challenge_id) {
+        const key = log.challenge_title || "Unnamed Challenge";
+        if (!byChallenge[key]) byChallenge[key] = [];
+        byChallenge[key].push(log);
+      }
     }
-    return map;
+
+    return { byHabit, byChallenge };
   }
 
+  const grouped = groupLogsByType(logs);
 
   return (
     <div className="progress-log">
-          <div className="refresh-logs">
-            <button
-              className="refresh-button"
-              onClick={() => setRefreshKey((prev) => prev + 1)}
-            >
-              🔄 Refresh Logs
-            </button>
-          </div>
+      <div className="refresh-logs">
+        <button
+          className="refresh-button"
+          onClick={() => setRefreshKey((prev) => prev + 1)}
+        >
+          🔄 Refresh Logs
+        </button>
+      </div>
+
+      {Object.entries(grouped.byHabit).map(([name, entries]) => (
+        <div className="habit-log-block" key={name}>
+          <h4>Habit: {name}</h4>
+          <ul>
+            {entries.map((log, i) => (
+              <li
+                key={i}
+                className={`log-entry ${
+                  log.completed ? "log-completed" : "log-pending"
+                }`}
+              >
+                {log.completed ? "✅" : "❌"}{" "}
+                {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      {Object.entries(grouped.byChallenge).map(([name, entries]) => (
+        <div className="challenge-log-block" key={name}>
+          <h4>Challenge: {name}</h4>
+          <ul>
+            {entries.map((log, i) => (
+              <li
+                key={i}
+                className={`log-entry ${
+                  log.completed ? "log-completed" : "log-pending"
+                }`}
+              >
+                {log.completed ? "✅" : "❌"}{" "}
+                {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
       {streakDates.length > 0 && (
         <div className="streak-display">
-          <h2 className="streak-title">
-            🔥 {streakDates.length}-Day Streak
-          </h2>
+          <h2 className="streak-title">🔥 {streakDates.length}-Day Streak</h2>
           <div className="streak-icons">
             {streakDates.map((date, index) => (
               <div key={index} className="streak-dot" title={date}>
@@ -91,28 +137,6 @@ useEffect(() => {
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="log-section">
-        <h3 className="section-title">Your Progress Logs</h3>
-        {logs.length > 0 ? (
-          <ul className="log-list">
-                    {Object.entries(groupLogsByHabit(logs)).map(([habit, entries]) => (
-          <div key={habit} className="habit-log-block">
-            <h4>{habit}</h4>
-            <ul className="log-list">
-              {entries.map((log, i) => (
-                <li key={i}>
-                  ✅ {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-          </ul>
-        ) : (
-          <p className="no-logs">No progress logs yet.</p>
-        )}
       </div>
     </div>
   );

@@ -144,6 +144,8 @@ class HabitIndex(Resource):
             habit.completed = data.get("completed", habit.completed)
 
         try:
+            print(f"Updating habit: {habit}")
+            print(f"Data: {data}")
             db.session.commit()
             return jsonify({
                 "id": habit.id,

@@ -11,6 +11,7 @@ class ProgressLogList(Resource):
 
         if user_id:
 
+            logs = ProgressLog.query.all()
             habit_id = request.args.get("habit_id")
             challenge_id = request.args.get("challenge_id")
 
