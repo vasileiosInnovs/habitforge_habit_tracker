@@ -25,11 +25,6 @@ bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True, origins=["https://habitforge.onrender.com"])
 api = Api(app)
 
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    return response
-
 from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession
 from server.controllers.habit_controller import HabitList, HabitIndex
 from server.controllers.challenge_controller import ChallengeList, ChallengesIndex
