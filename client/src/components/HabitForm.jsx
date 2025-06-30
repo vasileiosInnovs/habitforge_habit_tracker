@@ -41,9 +41,10 @@ function HabitForm() {
     credentials: "include",
     body: JSON.stringify(payload),
   })
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to save habit");
-      return res.json();
+    .then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save habit");
+      return data;
     })
     .then((updatedHabit) => {
       if (isEditing) {
@@ -59,9 +60,12 @@ function HabitForm() {
       }
       setFormData({ name: "", frequency: "", description: "" });
     })
-
-    .catch((err) => console.error("Habit save failed:", err));
+    .catch((err) => {
+      toast.error(err.message);
+      console.error("Habit save failed:", err);
+    });
 };
+
 
 
   const handleEdit = (habit) => {

@@ -183,7 +183,7 @@ class HabitIndex(Resource):
 
             return make_response(
                 jsonify({'message':'Habit successfully deleted.'}),
-                204
+                202
             )
         
         else:
