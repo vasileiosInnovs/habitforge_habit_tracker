@@ -10,7 +10,7 @@ class Habit(db.Model, SerializerMixin):
     name = db.Column(db.String(), nullable=True)
     description = db.Column(db.String(255))
     frequency = db.Column(db.String(), nullable=False)
-    completed = db.Column(db.Boolean, default=False)
+    completed = db.Column(db.Boolean,nullable=False, default=False)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
 
     user = db.relationship('User', back_populates="habits")

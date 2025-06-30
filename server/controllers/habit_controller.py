@@ -101,6 +101,7 @@ class HabitList(Resource):
 
         except Exception as e:
             db.session.rollback()
+            print(f"[ERROR] Failed to create habit: {str(e)}")
             return jsonify({"error": f"Invalid data. Could not create habit. {str(e)}"}), 422
 
 
@@ -126,7 +127,7 @@ class HabitIndex(Resource):
             else:
                 return make_response(jsonify({
                     "Message": "You don't have habits."
-                }), 404)
+                }), 204)
             
         else:
             return make_response(
@@ -167,7 +168,9 @@ class HabitIndex(Resource):
 
         except Exception as e:
             db.session.rollback()
-            return jsonify({"error": f"Failed to update habit: {str(e)}"}), 500
+            print(f"[ERROR] Failed to create habit: {str(e)}")  # 👈 log it
+            return jsonify({"error": f"Failed to create habit: {str(e)}"}), 422
+
 
 
     def delete(self, id):
