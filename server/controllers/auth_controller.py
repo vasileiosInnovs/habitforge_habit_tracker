@@ -6,21 +6,21 @@ from server.models import db, User
 
 class SignUp(Resource):
     def post(self):
+        data = request.get_json()
+
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        image_url = data.get('image_url')
+        bio = data.get('bio')
+
+        if not username or not email or not password:
+            return {"error": "Username, email, and password are required."}, 400
+
+        if User.query.filter_by(email=email).first():
+            return {"error": "Email already exists."}, 409
+
         try:
-            data = request.get_json()
-
-            username = data.get('username')
-            email = data.get('email')
-            password = data.get('password')
-            image_url = data.get('image_url')
-            bio = data.get('bio')
-
-            if not username or not password or not email:
-                return {"error": "Username, password, and email are required."}, 400
-
-            if User.query.filter_by(email=email).first():
-                return {"error": "Email already exists."}, 400
-
             new_user = User(
                 username=username,
                 email=email,
@@ -32,13 +32,13 @@ class SignUp(Resource):
             db.session.add(new_user)
             db.session.commit()
 
-            session['user_id'] = new_user.id
+            session["user_id"] = new_user.id
 
             return make_response(jsonify(new_user.to_dict()), 201)
 
         except IntegrityError:
             db.session.rollback()
-            return make_response(jsonify({"error": "Invalid sign up"}), 409)
+            return {"error": "Username or email already taken"}, 409
 
 
 class CheckSession(Resource):
