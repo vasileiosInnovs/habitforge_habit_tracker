@@ -5,7 +5,7 @@ from flask_restful import Resource
 from server.models import ProgressLog, db
 from server.app import api
 
-class ProgressLog(Resource):
+class ProgressLogList(Resource):
     def get(self):
         user_id = session.get("user_id")
 
@@ -27,6 +27,7 @@ class ProgressLog(Resource):
                 for log in logs:
                     log_dict = {
                         "id": log.id,
+                        "name": log.name,
                         "date": log.date,
                         "time": log.time,
                         "status": log.status,

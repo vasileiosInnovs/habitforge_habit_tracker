@@ -57,11 +57,11 @@ class CheckSession(Resource):
         if user_id:
             user = User.query.get(user_id)
             if user:
-                return {
+                return jsonify({
                     "username": user.username,
                     "image URL": user.image_url,
                     "bio": user.bio
-                }, 200
+                }, 200)
         return {"error": "Not logged in"}, 401
 
 

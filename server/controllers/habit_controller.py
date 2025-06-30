@@ -16,7 +16,7 @@ class HabitList(Resource):
                 for habit in habits:
                     habit_dict = {
                         "id": habit.id,
-                        "name": habit.user,
+                        "name": habit.name,
                         "description": habit.description,
                         "frequency": habit.frequency,
                         "user_id": habit.user_id
@@ -74,6 +74,7 @@ class HabitList(Resource):
             db.session.commit()
 
             response = {
+                'id': new_habit.id,
                 'name': new_habit.name,
                 'description': new_habit.description,
                 'frequency': new_habit.frequency,
@@ -118,13 +119,14 @@ class HabitIndex(Resource):
             )
         
     def patch(self, id):
-        if habit.user_id != session.get('user_id'):
-            return jsonify({'error': 'Unauthorized'}), 403
-        
         habit = Habit.query.get(id)
 
         if not habit:
             return jsonify({"error": "Habit not found"}), 404
+        
+        if habit.user_id != session.get('user_id'):
+            return jsonify({'error': 'Unauthorized'}), 403
+        
 
         data = request.get_json()
 
@@ -153,6 +155,9 @@ class HabitIndex(Resource):
 
             habit = Habit.query.filter(Habit.id == id).first()
 
+            if not habit:
+                return jsonify({"error": "Habit not found"}), 404
+
             db.session.delete(habit)
             db.session.commit()
 
@@ -160,6 +165,7 @@ class HabitIndex(Resource):
                 jsonify({'message':'Habit successfully deleted.'}),
                 204
             )
+        
         else:
             return make_response(
                 jsonify({'error': 'Unauthorized'}),

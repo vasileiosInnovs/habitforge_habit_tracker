@@ -9,7 +9,8 @@ class ProgressLog(db.Model, SerializerMixin):
     id = db.Column(db.Integer(), primary_key=True)
     habit_id = db.Column(db.Integer(), db.ForeignKey("habits.id", ondelete='CASCADE'), nullable=False)
     challenge_id = db.Column(db.Integer(), db.ForeignKey("challenges.id", ondelete='CASCADE'), nullable=True)
-    date = db.Column(db.DateTime(), onupdate=db.func.now())
+    date = db.Column(db.Date(), onupdate=db.func.now())
+    time = db.Column(db.Time(), nullable=True)
     status = db.Column(db.Text, nullable=False, default='Completed✅')
     note = db.Column(db.Text)
 
