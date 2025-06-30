@@ -5,7 +5,8 @@ function MyDay() {
   const [habits, setHabits] = useState([]);
   const [streak, setStreak] = useState(0);
 
-  useEffect(() => {
+  // Fetch habits and streak on load and refresh
+  const fetchHabits = () => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
       method: "GET",
       credentials: "include",
@@ -17,14 +18,22 @@ function MyDay() {
       .then((data) => {
         if (Array.isArray(data)) {
           setHabits(data);
+          const completedCount = data.filter(h => h.completed).length;
+          setStreak(completedCount);
         } else {
           setHabits([]);
+          setStreak(0);
         }
       })
       .catch((err) => {
         console.error("Error fetching habits:", err);
         setHabits([]);
+        setStreak(0);
       });
+  };
+
+  useEffect(() => {
+    fetchHabits();
   }, []);
 
   const handleLog = (habitId) => {
@@ -35,9 +44,12 @@ function MyDay() {
       body: JSON.stringify({ habit_id: habitId }),
     })
       .then((res) => {
-        if (res.ok) {
-          setStreak((prev) => prev + 1);
-        }
+        if (!res.ok) throw new Error("Log failed");
+        return res.json();
+      })
+      .then(() => {
+        // Re-fetch habits to get updated 'completed' status
+        fetchHabits();
       })
       .catch((err) => console.error("Error logging habit", err));
   };
@@ -79,9 +91,18 @@ function MyDay() {
                   <h3>{habit.name}</h3>
                   <p>{habit.description}</p>
                 </div>
-                <button className="log-button" onClick={() => handleLog(habit.id)}>
-                  Mark as Done ✅
-                </button>
+                {habit.completed ? (
+                  <button className="log-button completed" disabled>
+                    ✅ Completed
+                  </button>
+                ) : (
+                  <button
+                    className="log-button"
+                    onClick={() => handleLog(habit.id)}
+                  >
+                    Mark as Done ✅
+                  </button>
+                )}
               </li>
             ))}
           </ul>

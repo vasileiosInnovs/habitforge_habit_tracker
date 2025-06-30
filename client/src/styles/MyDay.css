@@ -109,3 +109,8 @@
   color: #999;
   font-style: italic;
 }
+
+.log-button.completed {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
