@@ -41,11 +41,15 @@ function HabitForm() {
     credentials: "include",
     body: JSON.stringify(payload),
   })
-    .then(async (res) => {
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to save habit");
+        .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        console.error("API Error Response:", data);
+        throw new Error(data.error || "Failed to save habit");
+      }
       return data;
     })
+
     .then((updatedHabit) => {
       if (isEditing) {
         setHabits((prev) =>
