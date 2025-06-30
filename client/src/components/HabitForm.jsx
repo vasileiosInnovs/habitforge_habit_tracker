@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Forms.css";
 import "../styles/Lists.css";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 function HabitForm() {
   const [formData, setFormData] = useState({ name: "", frequency: "", description: "" });
