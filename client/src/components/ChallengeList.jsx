@@ -4,7 +4,7 @@ import JoinChallengeForm from "./JoinChallengeForm";
 import { toast } from "react-toastify";
 import "../styles/Lists.css";
 
-function ChallengeList() {
+function ChallengeList({ user }) {
   const [challenges, setChallenges] = useState([]);
   const [joinedChallengeId, setJoinedChallengeId] = useState(null);
 
@@ -13,12 +13,12 @@ function ChallengeList() {
       credentials: "include"
     })
       .then((res) => res.json())
-      .then(setChallenges)
+      .then(data => setChallenges(data))
       .catch((err) => console.error("Failed to load challenges", err));
   }, []);
 
   const handleChallengeCreated = (newChallenge) => {
-    setChallenges([...challenges, newChallenge]);
+    setChallenges(prev => [...prev, newChallenge]);
     toast.success("Challenge created!");
   };
 
@@ -31,14 +31,18 @@ function ChallengeList() {
     setJoinedChallengeId(null);
   };
 
+  // ✅ Filter out challenges created by current user
+  const otherChallenges = challenges.filter(c => c.user_id !== user?.id);
+
   return (
     <div className="challenge-list-container">
       <h2>All Challenges</h2>
 
-      <ChallengeForm onChallengeCreated={handleChallengeCreated} />
+      {/* Only show the form if user is logged in */}
+      {user && <ChallengeForm onChallengeCreated={handleChallengeCreated} />}
 
       <div className="challenge-grid">
-        {challenges.map((challenge) => (
+        {otherChallenges.map((challenge) => (
           <div key={challenge.id} className="challenge-card">
             <h3>{challenge.title}</h3>
             <p>{challenge.description}</p>
@@ -51,8 +55,11 @@ function ChallengeList() {
                 onJoined={handleJoined}
               />
             ) : (
-              <button onClick={() => handleJoin(challenge.id)} className="join-btn">
-                Join This Challenge
+              <button
+                onClick={() => handleJoin(challenge.id)}
+                className="join-btn"
+              >
+                Join Challenge
               </button>
             )}
           </div>
