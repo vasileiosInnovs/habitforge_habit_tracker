@@ -34,6 +34,33 @@ function HabitForm() {
       });
   };
 
+  const handleDelete = (id) => {
+    fetch(`${process.env.REACT_APP_API_URL}/habits/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+        setHabits(habits.filter((h) => h.id !== id));
+      }
+    });
+  };
+
+  const toggleCompletion = (habit) => {
+    const updated = { ...habit, completed: !habit.completed };
+    fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ completed: updated.completed }),
+    }).then((res) => {
+      if (res.ok) {
+        setHabits(
+          habits.map((h) => (h.id === habit.id ? updated : h))
+        );
+      }
+    });
+  };
+
   return (
     <div className="myday">
       <h1>Your Habits</h1>
@@ -62,7 +89,22 @@ function HabitForm() {
                 <h3>{habit.name}</h3>
                 <p>Frequency: {habit.frequency}</p>
               </div>
-              <button className="mark-btn">Mark Done</button>
+              <div>
+                <button
+                  className="mark-btn"
+                  style={{ backgroundColor: habit.completed ? "#48bb78" : "#6ab04c" }}
+                  onClick={() => toggleCompletion(habit)}
+                >
+                  {habit.completed ? "Completed" : "Mark Done"}
+                </button>
+                <button
+                  className="mark-btn"
+                  style={{ backgroundColor: "#e53e3e", marginLeft: "0.5rem" }}
+                  onClick={() => handleDelete(habit.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
