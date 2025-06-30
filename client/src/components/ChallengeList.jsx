@@ -13,7 +13,7 @@ function ChallengeList({ user }) {
       credentials: "include"
     })
       .then((res) => res.json())
-      .then(data => setChallenges(data))
+      .then((data) => setChallenges(data))
       .catch((err) => console.error("Failed to load challenges", err));
   }, []);
 
@@ -31,23 +31,21 @@ function ChallengeList({ user }) {
     setJoinedChallengeId(null);
   };
 
-  // ✅ Filter out challenges created by current user
   const otherChallenges = challenges.filter(c => c.user_id !== user?.id);
 
   return (
     <div className="challenge-list-container">
       <h2>All Challenges</h2>
 
-      {/* Only show the form if user is logged in */}
       {user && <ChallengeForm onChallengeCreated={handleChallengeCreated} />}
 
       <div className="challenge-grid">
-        {otherChallenges.map((challenge) => (
-          <div key={challenge.id} className="challenge-card">
+        {otherChallenges.map((challenge, i) => (
+          <div key={challenge.id || i} className="challenge-card">
             <h3>{challenge.title}</h3>
             <p>{challenge.description}</p>
-            <p><strong>Start:</strong> {challenge.start_date}</p>
-            <p><strong>End:</strong> {challenge.end_date}</p>
+            <p><strong>Start:</strong> {new Date(challenge.start_date).toLocaleDateString()}</p>
+            <p><strong>End:</strong> {new Date(challenge.end_date).toLocaleDateString()}</p>
 
             {joinedChallengeId === challenge.id ? (
               <JoinChallengeForm

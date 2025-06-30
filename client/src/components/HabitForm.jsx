@@ -3,7 +3,7 @@ import "../styles/Forms.css";
 import "../styles/Lists.css";
 
 function HabitForm() {
-  const [formData, setFormData] = useState({ name: "", frequency: "" });
+  const [formData, setFormData] = useState({ name: "", frequency: "", description: "" });
   const [habits, setHabits] = useState([]);
 
   useEffect(() => {
@@ -20,19 +20,20 @@ function HabitForm() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${process.env.REACT_APP_API_URL}/habits`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((newHabit) => {
-        setHabits([...habits, newHabit]);
-        setFormData({ name: "", frequency: "" });
-      });
-  };
+  e.preventDefault();
+  fetch(`${process.env.REACT_APP_API_URL}/habits`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ ...formData, completed: false }),
+  })
+    .then((res) => res.json())
+    .then((newHabit) => {
+      setHabits([...habits, newHabit]);
+      setFormData({ name: "", frequency: "", description: "" });
+    });
+};
+
 
   const handleDelete = (id) => {
     fetch(`${process.env.REACT_APP_API_URL}/habits/${id}`, {
@@ -75,6 +76,12 @@ function HabitForm() {
           value={formData.frequency}
           onChange={handleChange}
           placeholder="e.g. Daily, Weekly"
+        />
+        <input
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
         />
         <button type="submit">Add Habit</button>
       </form>

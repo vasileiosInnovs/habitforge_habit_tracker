@@ -19,6 +19,7 @@ class HabitList(Resource):
                         "name": habit.name,
                         "description": habit.description,
                         "frequency": habit.frequency,
+                        "completed": habit.completed,
                         "user_id": habit.user_id
                     }
                     habits_list.append(habit_dict)
@@ -50,6 +51,7 @@ class HabitList(Resource):
         name = data.get('name')
         description = data.get('description')
         frequency = data.get('frequency')
+        completed = data.get('completed', False)
 
         errors = {}
         if not name:
@@ -67,6 +69,7 @@ class HabitList(Resource):
                 name=name,
                 description=description,
                 frequency=frequency,
+                completed=completed,
                 user_id=user_id
             )
 
@@ -78,6 +81,7 @@ class HabitList(Resource):
                 'name': new_habit.name,
                 'description': new_habit.description,
                 'frequency': new_habit.frequency,
+                "completed": new_habit.completed,
                 'user_id': new_habit.user_id
             }
 
@@ -100,6 +104,8 @@ class HabitIndex(Resource):
                     "name": habit.name,
                     "description": habit.description,
                     "frequency": habit.frequency,
+                    "completed": habit.completed
+
                 }
 
                 return make_response(
@@ -136,6 +142,9 @@ class HabitIndex(Resource):
             habit.description = data.get('description', habit.description)
         if "frequency" in data:
             habit.frequency = data.get('frequency', habit.frequency)
+        if "completed" in data:
+            habit.completed = data.get("completed", habit.completed)
+
 
         try:
             db.session.commit()

@@ -61,7 +61,7 @@ class CheckSession(Resource):
                     "username": user.username,
                     "image URL": user.image_url,
                     "bio": user.bio
-                }, 200)
+                }), 200
         return {"error": "Not logged in"}, 401
 
 

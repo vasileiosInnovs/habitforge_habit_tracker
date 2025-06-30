@@ -43,7 +43,7 @@ class ParticipationList(Resource):
         personal_goal = data.get('personal_goal', '')
 
         if not challenge_id:
-            return jsonify({'error': 'Challenge ID is requered'}), 422
+            return jsonify({'error': 'Challenge ID is required'}), 422
         
         existing = Participation.query.filter_by(user_id=user_id, challenge_id=challenge_id).first()
         if existing:
@@ -79,7 +79,7 @@ class ParticipationIndex(Resource):
         try:
             db.session.delete(participation)
             db.session.commit()
-            return jsonify({'message': 'Left challenge'}), 204
+            return jsonify({'message': 'Left challenge'}), 200
         except:
             db.session.rollback()
             return jsonify({'error': 'Could not leave challenge'}), 500
@@ -99,7 +99,14 @@ class ParticipationIndex(Resource):
 
         try:
             db.session.commit()
-            return jsonify({'message': 'Participation updated'}), 200
+            return jsonify({
+                'message': 'Participation updated',
+                'id': participation.id,
+                'reason_for_joining': participation.reason_for_joining,
+                'personal_goal': participation.personal_goal
+            }), 200
+
+        
         except:
             db.session.rollback()
             return jsonify({'error': 'Error in updating'}), 500

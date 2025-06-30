@@ -51,28 +51,38 @@ with app.app_context():
     ]
 
     for user in users:
-      num_habits = randint(1, 2)
-      chosen_habits = sample(habit_data, num_habits)
-      for name, desc in chosen_habits:
-          habit = Habit(
-              name=name,
-              description=desc,
-              frequency=randint(5, 50),
-              user_id=user.id
-          )
-          db.session.add(habit)
+        num_habits = randint(1, 2)
+        chosen_habits = sample(habit_data, num_habits)
+        for name, desc in chosen_habits:
+            habit = Habit(
+                name=name,
+                description=desc,
+                frequency=choice(['Daily', 'Weekly']),
+                completed=choice([True, False]),
+                user_id=user.id
+            )
+            db.session.add(habit)
 
     db.session.commit()
 
     print('Challenges...')
-    challenges = [
-        Challenge(title='30-Day Morning Journaling Challenge', description='Commit to journaling each morning for 30 days to build clarity, gratitude, and focus before your day begins.', start_date='2025-07-01', end_date='2025-07-30'),
-        Challenge(title='21-Day Digital Detox Challenge', description='Unplug for at least one hour each day — no social media, no screens — and reclaim your attention and peace of mind.', start_date='2025-07-01', end_date='2025-07-21'),
-        Challenge(title='14-Day Cold Shower Challenge', description='Start every day with a 30-second cold shower to train your mind to embrace discomfort and build discipline.', start_date='2025-07-01', end_date='2025-07-14'),
-        Challenge(title='7-Day Evening Reflection Sprint', description='Reflect and journal for 5 - 10 minutes each night for one week to improve self-awareness and decision-making.', start_date='2025-07-01', end_date='2025-07-07')
-    ]
-    
-    db.session.add_all(challenges)
+    challenges = []
+    for title, desc, start, end in [
+        ('30-Day Morning Journaling Challenge', 'Commit to journaling...', '2025-07-01', '2025-07-30'),
+        ('21-Day Digital Detox Challenge', 'Unplug for at least...', '2025-07-01', '2025-07-21'),
+        ('14-Day Cold Shower Challenge', 'Start every day with...', '2025-07-01', '2025-07-14'),
+        ('7-Day Evening Reflection Sprint', 'Reflect and journal...', '2025-07-01', '2025-07-07'),
+    ]:
+        challenge = Challenge(
+            title=title,
+            description=desc,
+            start_date=start,
+            end_date=end,
+            user_id=choice(users).id
+        )
+        db.session.add(challenge)
+        challenges.append(challenge)
+
     db.session.commit()
 
     print('Participations...')

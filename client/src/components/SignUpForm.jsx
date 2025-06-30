@@ -73,7 +73,7 @@ function SignupForm({ onSignup }) {
             <ErrorMessage name="image_url" component="div" />
 
             <label>Bio</label>
-            <Field name="bio" as="textarea" className="input" />
+            <Field name="bio" as="textarea" className="input" maxLength="50" />
             <ErrorMessage name="bio" component="div" />
 
             {errors.submit && <div style={{ color: "red" }}>{errors.submit}</div>}
