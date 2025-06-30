@@ -1,11 +1,30 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import '../styles/NavBar.css';
+import { useNavigate, NavLink } from "react-router-dom";
+
 
 function NavBar({ user, onLogout }) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const navigate = useNavigate(); // ← useNavigate hook
 
-    console.log("NavBar user prop:", user);
+  const handleLogout = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/logout`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          onLogout();
+          navigate("/"); 
+        } else {
+          console.error("Logout failed");
+        }
+      })
+      .catch((err) => console.error("Logout error:", err));
+  };
+
+
 
     return (
         <nav className="navbar">
@@ -45,7 +64,7 @@ function NavBar({ user, onLogout }) {
                 )}
                 {user ? (
                   <div className="auth-buttons">
-                    <button className="logout-btn" onClick={onLogout}>Logout</button>
+                    <button className="logout-btn" onClick={handleLogout}>Logout</button>
                   </div>
                 ) : (
                   <>
