@@ -68,7 +68,7 @@ function App() {
           path="/challenges"
           element={
             <ProtectedRoute user={user}>
-              <ChallengeForm />
+              <ChallengeForm user={user}/>
             </ProtectedRoute>
           }
         />

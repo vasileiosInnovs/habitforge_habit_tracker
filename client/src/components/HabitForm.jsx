@@ -79,6 +79,7 @@ function HabitForm() {
       name: habit.name,
       frequency: habit.frequency,
       description: habit.description,
+      completed: habit.completed 
     });
   };
 

@@ -10,14 +10,14 @@ function ChallengeList({ user }) {
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
-      credentials: "include"
+      credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch challenges");
         return res.json();
       })
       .then(setChallenges)
-      .catch((err) => console.error("Failed to load challenges", err));
+      .catch((err) => console.error("Failed to load challenges:", err));
   }, []);
 
   const handleChallengeCreated = (newChallenge) => {
@@ -36,6 +36,7 @@ function ChallengeList({ user }) {
 
   const yourChallenges = challenges.filter((c) => c.user_id === user?.id);
   const otherChallenges = challenges.filter((c) => c.user_id !== user?.id);
+  const allChallenges = [...yourChallenges, ...otherChallenges];
 
   return (
     <div className="challenge-list-container">
@@ -44,39 +45,43 @@ function ChallengeList({ user }) {
 
       <h2>All Challenges</h2>
       <div className="challenge-grid">
-        {challenges.length === 0 && (
+        {allChallenges.length === 0 ? (
           <p className="no-challenges">No challenges available yet.</p>
+        ) : (
+          allChallenges.map((challenge) => (
+            <div key={challenge.id} className="challenge-card">
+              <h3>{challenge.title}</h3>
+              <p>{challenge.description}</p>
+              <p>
+                <strong>Start:</strong>{" "}
+                {challenge.start_date
+                  ? new Date(challenge.start_date).toLocaleDateString()
+                  : "N/A"}
+              </p>
+              {challenge.end_date && (
+                <p>
+                  <strong>End:</strong>{" "}
+                  {new Date(challenge.end_date).toLocaleDateString()}
+                </p>
+              )}
+
+              {challenge.user_id !== user?.id &&
+                (joinedChallengeId === challenge.id ? (
+                  <JoinChallengeForm
+                    challengeId={challenge.id}
+                    onJoined={handleJoined}
+                  />
+                ) : (
+                  <button
+                    onClick={() => handleJoin(challenge.id)}
+                    className="join-btn"
+                  >
+                    Join Challenge
+                  </button>
+                ))}
+            </div>
+          ))
         )}
-
-        {[...yourChallenges, ...otherChallenges].map((challenge) => (
-          <div key={challenge.id} className="challenge-card">
-            <h3>{challenge.title}</h3>
-            <p>{challenge.description}</p>
-            <p>
-              <strong>Start:</strong>{" "}
-              {new Date(challenge.start_date).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>End:</strong>{" "}
-              {new Date(challenge.end_date).toLocaleDateString()}
-            </p>
-
-            {challenge.user_id !== user?.id &&
-              (joinedChallengeId === challenge.id ? (
-                <JoinChallengeForm
-                  challengeId={challenge.id}
-                  onJoined={handleJoined}
-                />
-              ) : (
-                <button
-                  onClick={() => handleJoin(challenge.id)}
-                  className="join-btn"
-                >
-                  Join Challenge
-                </button>
-              ))}
-          </div>
-        ))}
       </div>
     </div>
   );
