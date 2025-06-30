@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Forms.css";
 import "../styles/Lists.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function HabitForm() {
   const [formData, setFormData] = useState({ name: "", frequency: "", description: "" });
@@ -25,32 +27,43 @@ function HabitForm() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const url = `${process.env.REACT_APP_API_URL}/habits${isEditing ? `/${editingHabitId}` : ""}`;
-    const method = isEditing ? "PATCH" : "POST";
+  e.preventDefault();
 
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ ...formData, completed: false }),
+  const url = `${process.env.REACT_APP_API_URL}/habits${isEditing ? `/${editingHabitId}` : ""}`;
+  const method = isEditing ? "PATCH" : "POST";
+
+  const payload = isEditing
+    ? formData
+    : { ...formData, completed: false };
+
+  fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to save habit");
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to save habit");
-        return res.json();
-      })
-      .then((updatedHabit) => {
-        if (isEditing) {
-          setHabits(habits.map((h) => (h.id === editingHabitId ? updatedHabit : h)));
-          setIsEditing(false);
-          setEditingHabitId(null);
-        } else {
-          setHabits([...habits, updatedHabit]);
-        }
-        setFormData({ name: "", frequency: "", description: "" });
-      })
-      .catch((err) => console.error(err));
-  };
+    .then((updatedHabit) => {
+      if (isEditing) {
+        setHabits((prev) =>
+          prev.map((h) => (h.id === editingHabitId ? updatedHabit : h))
+        );
+        toast.success("Habit updated!");
+        setIsEditing(false);
+        setEditingHabitId(null);
+      } else {
+        setHabits((prev) => [...prev, updatedHabit]);
+        toast.success("Habit added!");
+      }
+      setFormData({ name: "", frequency: "", description: "" });
+    })
+
+    .catch((err) => console.error("Habit save failed:", err));
+};
+
 
   const handleEdit = (habit) => {
     setIsEditing(true);

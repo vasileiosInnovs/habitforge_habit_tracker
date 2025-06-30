@@ -152,7 +152,9 @@ class HabitIndex(Resource):
                 "id": habit.id,
                 "name": habit.name,
                 "description": habit.description,
-                "frequency": habit.frequency
+                "frequency": habit.frequency,
+                "completed": habit.completed,  
+                "user_id": habit.user_id 
             }), 200
         
         except Exception as e:
