@@ -110,7 +110,7 @@ function HabitForm() {
   };
 
   const handleDelete = (id) => {
-    fetch(`${process.env.REACT_APP_API_URL}/habits`, {
+    fetch(`${process.env.REACT_APP_API_URL}/habits/${id}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -128,7 +128,7 @@ function HabitForm() {
   const toggleCompletion = (habit) => {
     const updatedCompleted = !habit.completed;
 
-     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
+     fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

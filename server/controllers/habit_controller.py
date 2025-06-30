@@ -149,25 +149,19 @@ class HabitIndex(Resource):
             print("PATCH /habits/<id> error:", e)
             return {"error": "Failed to update habit"}, 500
 
-    def delete(self, id):
-        if session.get('user_id'):
-
-            habit = Habit.query.filter(Habit.id == id).first()
-
+    class HabitByID(Resource):
+        def delete(self, id):
+            habit = Habit.query.get(id)
             if not habit:
-                return jsonify({"error": "Habit not found"}), 404
-
-            db.session.delete(habit)
-            db.session.commit()
-
-            return make_response(
-                jsonify({'message':'Habit successfully deleted.'}), 200
-            )
-        
-        else:
-            return make_response(
-                jsonify({'error': 'Unauthorized'}),
-                401
-            )
+                return {"error": "Habit not found"}, 404
+    
+            try:
+                db.session.delete(habit)
+                db.session.commit()
+                return {"message": "Habit deleted"}, 200
+            except Exception as e:
+                db.session.rollback()
+                print("DELETE /habits/<id> error:", e)
+                return {"error": "Failed to delete habit"}, 500
 
 
