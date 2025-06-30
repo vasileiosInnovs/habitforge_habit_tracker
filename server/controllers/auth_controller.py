@@ -1,69 +1,58 @@
 from flask import request, session, make_response, jsonify
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-
 from server.models import db, User
-from server.app import api
+
 
 class SignUp(Resource):
     def post(self):
         try:
-           data = request.get_json()
+            data = request.get_json()
 
-           username = data.get('username')
-           email = data.get('email')
-           password = data.get('password')
-           image_url = data.get('image_url')
-           bio = data.get('bio')
+            username = data.get('username')
+            email = data.get('email')
+            password = data.get('password')
+            image_url = data.get('image_url')
+            bio = data.get('bio')
 
-           if not username or not password or not email:
-               return {
-                    'error': 'Username, password and email are required.'
-               }
-           
-           if User.query.filter_by(email=email).first():
+            if not username or not password or not email:
+                return {"error": "Username, password, and email are required."}, 400
+
+            if User.query.filter_by(email=email).first():
                 return {"error": "Email already exists."}, 400
-           
-           new_user = User(
-               username=username,
-               email=email,
-               image_url=image_url,
-               bio=bio
-           )
-           new_user.password = password
 
-           db.session.add(new_user)
-           db.session.commit()
+            new_user = User(
+                username=username,
+                email=email,
+                image_url=image_url,
+                bio=bio
+            )
+            new_user.password = password
 
-           session['user_id'] = new_user.id
+            db.session.add(new_user)
+            db.session.commit()
 
-           new_user_dict = new_user.to_dict()
+            session['user_id'] = new_user.id
 
-           return make_response(
-               jsonify(new_user_dict),
-               201
-           )
+            return make_response(jsonify(new_user.to_dict()), 201)
+
         except IntegrityError:
             db.session.rollback()
-            response_dict = {"message": "Invalid sign up"}
-            return make_response(
-                jsonify(response_dict),
-                409
-            )
-        
+            return make_response(jsonify({"error": "Invalid sign up"}), 409)
+
+
 class CheckSession(Resource):
     def get(self):
         user_id = session.get("user_id")
         if user_id:
             user = User.query.get(user_id)
             if user:
-                return jsonify({
+                return {
                     "username": user.username,
-                    "image URL": user.image_url,
+                    "image_url": user.image_url,
                     "bio": user.bio
-                }), 200
-            if not user:
-                return jsonify({"error": "User not found"}), 404
+                }, 200
+            return {"error": "User not found"}, 404
 
         return {"error": "Not logged in"}, 401
 
@@ -71,7 +60,6 @@ class CheckSession(Resource):
 class Login(Resource):
     def post(self):
         data = request.get_json()
-
         username = data.get('username')
         password = data.get('password')
 
@@ -79,32 +67,19 @@ class Login(Resource):
 
         if user and user.check_pass(password):
             session['user_id'] = user.id
-
             return {
                 "username": user.username,
-                "image URL": user.image_url,
+                "image_url": user.image_url,
                 "bio": user.bio
             }, 200
-        
-        else:
-            return {
-                "error": "Username or password is incorrect."
-            }, 401
-        
+
+        return {"error": "Username or password is incorrect."}, 401
+
+
 class Logout(Resource):
     def delete(self):
-
         if session.get('user_id'):
             session.pop('user_id')
+            return {"message": "Logged out successfully."}, 204
 
-            response = {"message": " "}
-
-            return make_response(
-                jsonify(response),
-                204
-            )
-        
-        else:
-            response = {"error": "Unauthorized!"}
-
-            return make_response(jsonify(response), 401)
+        return {"error": "Unauthorized"}, 401
