@@ -45,7 +45,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <>
       <NavBar user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -108,7 +108,7 @@ function App() {
         />
       </Routes>
       <ToastContainer />
-    </Router>
+    </>
   );
 }
 

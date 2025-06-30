@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 1rem;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: #f8f9fa;
   color: #2d3748;
@@ -50,6 +50,9 @@ a {
 }
 
 @media (min-width: 768px) {
+  body {
+    padding: 0 2rem;
+  }
   .login-container {
     flex-direction: row;
     justify-content: space-between;
@@ -59,5 +62,11 @@ a {
   }
   .profile-card {
     padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    padding: 0 4rem;
   }
 }
