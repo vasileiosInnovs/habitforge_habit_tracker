@@ -5,10 +5,10 @@ import { toast } from "react-toastify";
 
 function HabitForm() {
   const [formData, setFormData] = useState({
-    name: values.name,
-    description: values.description,
-    frequency: values.frequency,
-    completed: !!values.completed
+     name: "",
+  description: "",
+  frequency: "",
+  completed: false
   });
   const [habits, setHabits] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -129,11 +129,16 @@ function HabitForm() {
     const updatedCompleted = !habit.completed;
 
     fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ completed: updatedCompleted }),
-    })
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include",
+  body: JSON.stringify({
+    name: values.name,
+    description: values.description,
+    frequency: values.frequency,
+    completed: !!values.completed  
+  })
+})
       .then((res) => {
         if (!res.ok) throw new Error("Failed to update habit status");
         return res.json();
