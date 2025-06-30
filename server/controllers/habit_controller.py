@@ -1,44 +1,19 @@
 from flask import jsonify, make_response, request, session
 from flask_restful import Resource
-
 from server.models import db, Habit
+
 
 class HabitList(Resource):
     def get(self):
         user_id = session.get("user_id")
-        if user_id:
-            habits = Habit.query.filter_by(user_id=user_id).all()
+        if not user_id:
+            return make_response(jsonify({'error': 'Unauthorized'}), 401)
 
-            if habits:
-                
-                habits_list = []
-                for habit in habits:
-                    habit_dict = {
-                        "id": habit.id,
-                        "name": habit.name,
-                        "description": habit.description,
-                        "frequency": habit.frequency,
-                        "completed": habit.completed,
-                        "user_id": habit.user_id
-                    }
-                    habits_list.append(habit_dict)
+        habits = Habit.query.filter_by(user_id=user_id).all()
+        habits_list = [habit.to_dict() for habit in habits]
 
-                return make_response(
-                    jsonify(habits_list),
-                    200
-                )
-            
-            else:
-                return make_response(jsonify({
-                    "Message": "You don't have habits."
-                }), 204)
-            
-        else:
-            return make_response(
-                jsonify({'error': 'Unauthorized'}),
-                401
-            )
-        
+        return make_response(jsonify(habits_list), 200)
+
     def post(self):
         user_id = session.get("user_id")
         if not user_id:
@@ -73,95 +48,60 @@ class HabitList(Resource):
             db.session.add(new_habit)
             db.session.commit()
 
-            response = {
-                'id': new_habit.id,
-                'name': new_habit.name,
-                'description': new_habit.description,
-                'frequency': new_habit.frequency,
-                "completed": new_habit.completed,
-                'user_id': new_habit.user_id
-            }
-
-            return make_response(jsonify(response), 201)
+            return make_response(jsonify(new_habit.to_dict()), 201)
 
         except Exception as e:
             db.session.rollback()
             print(f"[ERROR] Failed to create habit: {str(e)}")
-            return jsonify({"error": f"Invalid data. Could not create habit. {str(e)}"}), 422
+            return jsonify({"error": f"Could not create habit. {str(e)}"}), 500
 
 
 class HabitIndex(Resource):
     def get(self, id):
-        if session.get('user_id'):
-            habit = Habit.query.filter(Habit.id == id).first()
+        user_id = session.get("user_id")
+        if not user_id:
+            return make_response(jsonify({'error': 'Unauthorized'}), 401)
 
-            if habit:
-                habit_dict = {
-                    "name": habit.name,
-                    "description": habit.description,
-                    "frequency": habit.frequency,
-                    "completed": habit.completed
-
-                }
-
-                return make_response(
-                    jsonify(habit_dict),
-                    200
-                )
-            
-            else:
-                return make_response(jsonify({
-                    "Message": "You don't have habits."
-                }), 204)
-            
+        habit = Habit.query.get(id)
+        if habit and habit.user_id == user_id:
+            return make_response(jsonify(habit.to_dict()), 200)
         else:
-            return make_response(
-                jsonify({'error': 'Unauthorized'}),
-                401
-            )
-        
+            return make_response(jsonify({"error": "Habit not found"}), 404)
+
+
+class HabitByID(Resource):
     def patch(self, id):
         habit = Habit.query.get(id)
         if not habit:
             return {"error": "Habit not found"}, 404
 
         data = request.get_json()
-        print(f"Updating habit: {habit}")
-        print(f"Data: {data}")
+        print(f"Updating habit {id} with data: {data}")
 
         try:
-            for attr in ["name", "frequency", "description"]:
+            for attr in ["name", "frequency", "description", "completed"]:
                 if attr in data:
                     setattr(habit, attr, data[attr])
 
-            if "completed" in data:
-                val = data["completed"]
-                if isinstance(val, str):
-                    habit.completed = val.lower() == "true"
-                else:
-                    habit.completed = bool(val)
-
             db.session.commit()
-            return make_response(jsonify(habit.to_dict()), 200)
+            return habit.to_dict(), 200
 
         except Exception as e:
             db.session.rollback()
-            print("PATCH /habits/<id> error:", e)
+            import traceback
+            traceback.print_exc()
             return {"error": "Failed to update habit"}, 500
 
-    class HabitByID(Resource):
-        def delete(self, id):
-            habit = Habit.query.get(id)
-            if not habit:
-                return {"error": "Habit not found"}, 404
-    
-            try:
-                db.session.delete(habit)
-                db.session.commit()
-                return {"message": "Habit deleted"}, 200
-            except Exception as e:
-                db.session.rollback()
-                print("DELETE /habits/<id> error:", e)
-                return {"error": "Failed to delete habit"}, 500
+    def delete(self, id):
+        habit = Habit.query.get(id)
+        if not habit:
+            return {"error": "Habit not found"}, 404
 
-
+        try:
+            db.session.delete(habit)
+            db.session.commit()
+            return {"message": "Habit deleted"}, 200
+        except Exception as e:
+            db.session.rollback()
+            print("DELETE /habits/<id> error:", e)
+            return {"error": "Failed to delete habit"}, 500
