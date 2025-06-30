@@ -3,6 +3,8 @@ from flask_restful import Resource
 
 from server.models import db, Habit
 from server.app import api
+from server.models import ProgressLog
+import datetime
 
 class HabitList(Resource):
     def get(self):
@@ -42,10 +44,10 @@ class HabitList(Resource):
         
     def post(self):
         user_id = session.get("user_id")
-        
+
         if not user_id:
-            return  {"error": "Unauthorized. Please log in."}, 401
-        
+            return {"error": "Unauthorized. Please log in."}, 401
+
         data = request.get_json()
 
         name = data.get('name')
@@ -63,7 +65,7 @@ class HabitList(Resource):
 
         if errors:
             return {'errors': errors}, 422
-        
+
         try:
             new_habit = Habit(
                 name=name,
@@ -72,8 +74,20 @@ class HabitList(Resource):
                 completed=completed,
                 user_id=user_id
             )
-
             db.session.add(new_habit)
+            db.session.commit()
+
+            today = datetime.date.today()
+            now = datetime.datetime.now().time()
+            new_log = ProgressLog(
+                user_id=user_id,
+                habit_id=new_habit.id,
+                date=today,
+                time=now,
+                status="created",
+                note="Habit was added"
+            )
+            db.session.add(new_log)
             db.session.commit()
 
             response = {
@@ -85,14 +99,12 @@ class HabitList(Resource):
                 'user_id': new_habit.user_id
             }
 
-            return make_response(
-                jsonify(response),
-                201
-            )
-        
-        except:
+            return make_response(jsonify(response), 201)
+
+        except Exception as e:
             db.session.rollback()
-            return jsonify({"error": "Invalid data. Could not create habit."}), 422
+            return jsonify({"error": f"Invalid data. Could not create habit. {str(e)}"}), 422
+
 
 class HabitIndex(Resource):
     def get(self, id):
@@ -129,22 +141,20 @@ class HabitIndex(Resource):
 
         if not habit:
             return jsonify({"error": "Habit not found"}), 404
-        
+
         if habit.user_id != session.get('user_id'):
             return jsonify({'error': 'Unauthorized'}), 403
-        
 
         data = request.get_json()
 
         if "name" in data:
             habit.name = data.get('name', habit.name)
-        if  "description" in data:
+        if "description" in data:
             habit.description = data.get('description', habit.description)
         if "frequency" in data:
             habit.frequency = data.get('frequency', habit.frequency)
         if "completed" in data:
             habit.completed = data.get("completed", habit.completed)
-
 
         try:
             db.session.commit()
@@ -153,13 +163,14 @@ class HabitIndex(Resource):
                 "name": habit.name,
                 "description": habit.description,
                 "frequency": habit.frequency,
-                "completed": habit.completed,  
-                "user_id": habit.user_id 
+                "completed": habit.completed,
+                "user_id": habit.user_id
             }), 200
-        
+
         except Exception as e:
             db.session.rollback()
-            return jsonify({"error": "Failed to update habit"}), 500
+            return jsonify({"error": f"Failed to update habit: {str(e)}"}), 500
+
 
     def delete(self, id):
         if session.get('user_id'):

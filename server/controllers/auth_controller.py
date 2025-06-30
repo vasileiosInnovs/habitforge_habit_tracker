@@ -62,6 +62,9 @@ class CheckSession(Resource):
                     "image URL": user.image_url,
                     "bio": user.bio
                 }), 200
+            if not user:
+                return jsonify({"error": "User not found"}), 404
+
         return {"error": "Not logged in"}, 401
 
 

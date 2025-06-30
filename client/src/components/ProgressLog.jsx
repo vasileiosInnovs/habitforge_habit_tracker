@@ -4,21 +4,24 @@ import "../styles/Lists.css";
 function ProgressLog() {
   const [logs, setLogs] = useState([]);
   const [streakDates, setStreakDates] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
-      credentials: "include",
-    })
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error("Failed to fetch logs");
-      })
-      .then((data) => {
-        setLogs(data);
-        setStreakDates(calculateStreakDates(data));
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const handleRefresh = () => setRefreshKey((prev) => prev + 1);
+  window.addEventListener("refreshLogs", handleRefresh);
+  return () => window.removeEventListener("refreshLogs", handleRefresh);
+}, []);
+
+useEffect(() => {
+  fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+    credentials: "include",
+  })
+    .then((res) => res.ok ? res.json() : [])
+    .then((data) => {
+      setLogs(data);
+      setStreakDates(calculateStreakDates(data));
+    });
+}, [refreshKey]);
 
   function calculateStreakDates(logs) {
     const loggedDates = new Set(
@@ -56,6 +59,14 @@ function ProgressLog() {
 
   return (
     <div className="progress-log">
+          <div className="refresh-logs">
+            <button
+              className="refresh-button"
+              onClick={() => setRefreshKey((prev) => prev + 1)}
+            >
+              🔄 Refresh Logs
+            </button>
+          </div>
       {streakDates.length > 0 && (
         <div className="streak-display">
           <h2 className="streak-title">
