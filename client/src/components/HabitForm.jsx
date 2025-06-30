@@ -5,10 +5,10 @@ import { toast } from "react-toastify";
 
 function HabitForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    frequency: "",
-    description: "",
-    completed: false,
+    name: values.name,
+    description: values.description,
+    frequency: values.frequency,
+    completed: !!values.completed
   });
   const [habits, setHabits] = useState([]);
   const [isEditing, setIsEditing] = useState(false);

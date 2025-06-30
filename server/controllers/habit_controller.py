@@ -130,12 +130,20 @@ class HabitIndex(Resource):
         print(f"Data: {data}")
 
         try:
-            for attr in ["name", "frequency", "description", "completed"]:
+            for attr in ["name", "frequency", "description"]:
                 if attr in data:
                     setattr(habit, attr, data[attr])
 
+            if "completed" in data:
+                val = data["completed"]
+                if isinstance(val, str):
+                    habit.completed = val.lower() == "true"
+                else:
+                    habit.completed = bool(val)
+
             db.session.commit()
             return make_response(jsonify(habit.to_dict()), 200)
+
         except Exception as e:
             db.session.rollback()
             print("PATCH /habits/<id> error:", e)
