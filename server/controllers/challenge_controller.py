@@ -54,6 +54,22 @@ class ChallengeList(Resource):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": str(e)}), 422
+        
+    def get(self):
+        challenges = Challenge.query.all()
+
+        challenge_list = []
+        for c in challenges:
+            challenge_list.append({
+                "id": c.id,
+                "user_id": c.user_id,
+                "title": c.title,
+                "description": c.description,
+                "start_date": c.start_date,
+                "end_date": c.end_date
+            })
+
+        return make_response(jsonify(challenge_list), 200)
 
 class ChallengesIndex(Resource):
     def patch(self, id):
@@ -90,13 +106,13 @@ class ChallengesIndex(Resource):
     def delete(self, id):
         if session.get('user_id'):
             challenge = Challenge.query.get(id)
-    
+
             if not challenge:
                 return make_response(jsonify({'error': 'Challenge not found'}), 404)
-    
+
             db.session.delete(challenge)
             db.session.commit()
-    
+
             return make_response(jsonify({'message': 'Challenge successfully deleted.'}), 204)
         else:
             return make_response(jsonify({'error': 'Unauthorized'}), 401)
