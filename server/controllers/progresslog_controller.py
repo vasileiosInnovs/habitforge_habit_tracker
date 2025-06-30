@@ -14,7 +14,7 @@ class ProgressLogList(Resource):
             habit_id = request.args.get("habit_id")
             challenge_id = request.args.get("challenge_id")
 
-            logs = ProgressLog.query.filter(ProgressLog.user_id == user_id).all()  
+            """ logs = ProgressLog.query.filter(ProgressLog.user_id == user_id).all() """  
             if habit_id:
                 query = query.filter_by(habit_id=habit_id)
             if challenge_id:

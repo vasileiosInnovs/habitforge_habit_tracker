@@ -14,7 +14,6 @@ function HabitForm() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingHabitId, setEditingHabitId] = useState(null);
 
-  // Fetch habits
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
       credentials: "include",
@@ -36,53 +35,57 @@ function HabitForm() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const url = `${process.env.REACT_APP_API_URL}/habits${
-      isEditing ? `/${editingHabitId}` : ""
-    }`;
-    const method = isEditing ? "PATCH" : "POST";
+  const url = `${process.env.REACT_APP_API_URL}/habits${
+    isEditing ? `/${editingHabitId}` : ""
+  }`;
+  const method = isEditing ? "PATCH" : "POST";
 
-    const payload = isEditing ? formData : { ...formData, completed: false };
-
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    })
-      .then(async (res) => {
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          console.error("API Error Response:", data);
-          throw new Error(data.error || "Failed to save habit");
-        }
-        return data;
-      })
-      .then((updatedHabit) => {
-        if (isEditing) {
-          setHabits((prev) =>
-            prev.map((h) => (h.id === editingHabitId ? updatedHabit : h))
-          );
-          toast.success("Habit updated!");
-          setIsEditing(false);
-          setEditingHabitId(null);
-        } else {
-          setHabits((prev) => [...prev, updatedHabit]);
-          toast.success("Habit added!");
-        }
-        setFormData({
-          name: "",
-          frequency: "",
-          description: "",
-          completed: false,
-        });
-      })
-      .catch((err) => {
-        toast.error(err.message);
-        console.error("Habit save failed:", err);
-      });
+  const payload = {
+    ...formData,
+    completed: formData.completed,
   };
+
+  fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  })
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        console.error("API Error Response:", data);
+        throw new Error(data.error || "Failed to save habit");
+      }
+      return data;
+    })
+    .then((updatedHabit) => {
+      if (isEditing) {
+        setHabits((prev) =>
+          prev.map((h) => (h.id === editingHabitId ? updatedHabit : h))
+        );
+        toast.success("Habit updated!");
+        setIsEditing(false);
+        setEditingHabitId(null);
+      } else {
+        setHabits((prev) => [...prev, updatedHabit]);
+        toast.success("Habit added!");
+      }
+
+      setFormData({
+        name: "",
+        frequency: "",
+        description: "",
+        completed: false,
+      });
+    })
+    .catch((err) => {
+      toast.error(err.message);
+      console.error("Habit save failed:", err);
+    });
+};
 
   const handleEdit = (habit) => {
     setIsEditing(true);
@@ -217,9 +220,7 @@ function HabitForm() {
                 <button
                   className="mark-btn"
                   style={{
-                    backgroundColor: habit.completed
-                      ? "#48bb78"
-                      : "#6ab04c",
+                    backgroundColor: habit.completed ? "#48bb78" : "#6ab04c",
                   }}
                   onClick={() => toggleCompletion(habit)}
                 >
