@@ -37,10 +37,7 @@ class ProgressLogList(Resource):
                     }
                     logs_list.append(log_dict)
 
-                return make_response(
-                    jsonify(logs_list),
-                    200
-                )
+                return logs_list, 200
             
             else:
                 return make_response(jsonify({

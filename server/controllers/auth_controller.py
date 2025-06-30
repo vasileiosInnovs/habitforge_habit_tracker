@@ -34,7 +34,7 @@ class SignUp(Resource):
 
             session["user_id"] = new_user.id
 
-            return make_response(jsonify(new_user.to_dict()), 201)
+            return new_user.to_dict(), 201
 
         except IntegrityError:
             db.session.rollback()

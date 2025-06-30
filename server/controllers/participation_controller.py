@@ -25,10 +25,7 @@ class ParticipationList(Resource):
                 "join_date": p.join_date
             })
 
-        return make_response(
-            jsonify(result),
-            200
-        )
+        return (result), 200
     
     def post(self):
         user_id = session.get('user_id')

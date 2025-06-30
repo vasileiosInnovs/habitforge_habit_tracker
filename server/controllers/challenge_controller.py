@@ -49,7 +49,7 @@ class ChallengeList(Resource):
                 "end_date": new_challenge.end_date
             }
 
-            return make_response(jsonify(response), 201)
+            return response, 201
 
         except Exception as e:
             db.session.rollback()
@@ -69,7 +69,7 @@ class ChallengeList(Resource):
                 "end_date": c.end_date
             })
 
-        return make_response(jsonify(challenge_list), 200)
+        return challenge_list, 200
 
 class ChallengesIndex(Resource):
     def patch(self, id):
