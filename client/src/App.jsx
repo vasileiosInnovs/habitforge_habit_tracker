@@ -52,21 +52,14 @@ function App() {
         
         <Route path="/login" element={user ? <Navigate to="/myday" /> : <LoginForm onLogin={handleLogin} />} />
         <Route path="/signup" element={<SignupForm onSignup={setUser} />} />
+        <Route path="/habits" element={<HabitForm />} />
+
 
         <Route
           path="/myday"
           element={
             <ProtectedRoute user={user}>
               <MyDay />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/habits"
-          element={
-            <ProtectedRoute user={user}>
-              <HabitForm />
             </ProtectedRoute>
           }
         />
