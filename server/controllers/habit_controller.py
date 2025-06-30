@@ -135,13 +135,11 @@ class HabitIndex(Resource):
                     setattr(habit, attr, data[attr])
 
             db.session.commit()
-            return habit.to_dict(), 200
+            return make_response(jsonify(habit.to_dict()), 200)
         except Exception as e:
             db.session.rollback()
             print("PATCH /habits/<id> error:", e)
             return {"error": "Failed to update habit"}, 500
-
-
 
     def delete(self, id):
         if session.get('user_id'):
@@ -155,8 +153,7 @@ class HabitIndex(Resource):
             db.session.commit()
 
             return make_response(
-                jsonify({'message':'Habit successfully deleted.'}),
-                202
+                jsonify({'message':'Habit successfully deleted.'}), 200
             )
         
         else:
