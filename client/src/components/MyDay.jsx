@@ -5,7 +5,6 @@ function MyDay() {
   const [habits, setHabits] = useState([]);
   const [streak, setStreak] = useState(0);
 
-  // Fetch habits and streak on load and refresh
   const fetchHabits = () => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
       method: "GET",
@@ -48,7 +47,6 @@ function MyDay() {
         return res.json();
       })
       .then(() => {
-        // Re-fetch habits to get updated 'completed' status
         fetchHabits();
       })
       .catch((err) => console.error("Error logging habit", err));

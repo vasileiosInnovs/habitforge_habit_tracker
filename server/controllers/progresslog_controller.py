@@ -11,7 +11,6 @@ class ProgressLogList(Resource):
 
         if user_id:
 
-            logs = ProgressLog.query.all()
             habit_id = request.args.get("habit_id")
             challenge_id = request.args.get("challenge_id")
 
@@ -46,7 +45,7 @@ class ProgressLogList(Resource):
             else:
                 return make_response(jsonify({
                     "Message": "There are no logs"
-                }), 204)
+                }), 200)
             
         else:
             return make_response(
@@ -97,14 +96,13 @@ class Log(Resource):
 
         log.status = data.get('status', log.status)
         log.note = data.get('note', log.note)
-        log.rating = data.get('rating', log.rating)
 
         try:
             db.session.commit()
             return jsonify({
                 'message': 'Log updated successfully'
             }), 200
-        except:
+        except Exception:
             db.session.rollback()
             return jsonify({
                 'error': 'Failed to update log'
@@ -129,7 +127,7 @@ class Log(Resource):
             return jsonify({
                 'message': 'Log deleted'
             }), 204
-        except:
+        except Exception:
             db.session.rollback()
             return jsonify({
                 'error': 'Failed to delete log'

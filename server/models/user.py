@@ -19,6 +19,8 @@ class User(db.Model, SerializerMixin):
     habits = db.relationship('Habit', back_populates='user', cascade='all, delete-orphan')
     participations = db.relationship('Participation', back_populates='user', cascade='all, delete-orphan')
     challenges = db.relationship('Challenge', back_populates='user', cascade='all, delete-orphan')
+    progresslogs = db.relationship('ProgressLog', back_populates="user", cascade='all, delete-orphan')
+
 
 
     def __repr__(self):

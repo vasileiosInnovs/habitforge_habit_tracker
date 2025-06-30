@@ -2,9 +2,6 @@ from flask import jsonify, make_response, request, session
 from flask_restful import Resource
 
 from server.models import db, Habit
-from server.app import api
-from server.models import ProgressLog
-import datetime
 
 class HabitList(Resource):
     def get(self):
@@ -125,41 +122,24 @@ class HabitIndex(Resource):
         
     def patch(self, id):
         habit = Habit.query.get(id)
-
         if not habit:
-            return jsonify({"error": "Habit not found"}), 404
-
-        if habit.user_id != session.get('user_id'):
-            return jsonify({'error': 'Unauthorized'}), 403
+            return {"error": "Habit not found"}, 404
 
         data = request.get_json()
-
-        if "name" in data:
-            habit.name = data.get('name', habit.name)
-        if "description" in data:
-            habit.description = data.get('description', habit.description)
-        if "frequency" in data:
-            habit.frequency = data.get('frequency', habit.frequency)
-        if "completed" in data:
-            habit.completed = data.get("completed", habit.completed)
+        print(f"Updating habit: {habit}")
+        print(f"Data: {data}")
 
         try:
-            print(f"Updating habit: {habit}")
-            print(f"Data: {data}")
-            db.session.commit()
-            return jsonify({
-                "id": habit.id,
-                "name": habit.name,
-                "description": habit.description,
-                "frequency": habit.frequency,
-                "completed": habit.completed,
-                "user_id": habit.user_id
-            }), 200
+            for attr in ["name", "frequency", "description", "completed"]:
+                if attr in data:
+                    setattr(habit, attr, data[attr])
 
+            db.session.commit()
+            return habit.to_dict(), 200
         except Exception as e:
             db.session.rollback()
-            print(f"[ERROR] Failed to create habit: {str(e)}")  # 👈 log it
-            return jsonify({"error": f"Failed to create habit: {str(e)}"}), 422
+            print("PATCH /habits/<id> error:", e)
+            return {"error": "Failed to update habit"}, 500
 
 
 
