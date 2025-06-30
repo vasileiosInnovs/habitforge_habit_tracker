@@ -26,7 +26,7 @@ CORS(app, supports_credentials=True, origins=["https://habitforge.onrender.com"]
 api = Api(app)
 
 from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession
-from server.controllers.habit_controller import HabitList, HabitIndex
+from server.controllers.habit_controller import HabitList, HabitIndex, HabitByID
 from server.controllers.challenge_controller import ChallengeList, ChallengesIndex
 from server.controllers.progresslog_controller import ProgressLogList, Log
 from server.controllers.participation_controller import ParticipationList, ParticipationIndex
@@ -38,7 +38,7 @@ api.add_resource(Logout, '/logout')
 api.add_resource(CheckSession, '/check_session')
 
 api.add_resource(HabitList, '/habits')
-api.add_resource(HabitIndex, '/habits/<int:id>')
+api.add_resource(HabitByID, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
