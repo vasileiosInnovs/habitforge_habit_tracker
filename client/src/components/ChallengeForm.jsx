@@ -12,7 +12,7 @@ const ChallengeSchema = Yup.object().shape({
     .nullable()
 });
 
-function ChallengeForm({ onChallengeCreated }) {
+function ChallengeForm({ onChallengeCreated = () => {} }) {
   const initialValues = {
     title: '',
     description: '',
