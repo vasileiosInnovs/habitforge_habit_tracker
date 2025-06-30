@@ -1,26 +1,31 @@
-import React, { useState } from "react";
-import '../styles/Buttons.css';
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import "../styles/Buttons.css";
+
+const ChallengeSchema = Yup.object().shape({
+  title: Yup.string().required("Title is required"),
+  description: Yup.string().required("Description is required"),
+  start_date: Yup.date().required("Start date is required"),
+  end_date: Yup.date()
+    .min(Yup.ref('start_date'), "End date must be after start date")
+    .nullable()
+});
 
 function ChallengeForm({ onChallengeCreated }) {
-  const [formData, setFormData] = useState({
+  const initialValues = {
     title: '',
     description: '',
     start_date: '',
     end_date: ''
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = (values, { setSubmitting, resetForm }) => {
     fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(formData)
+      body: JSON.stringify(values)
     })
       .then((r) => {
         if (!r.ok) throw new Error("Failed to create challenge");
@@ -28,50 +33,46 @@ function ChallengeForm({ onChallengeCreated }) {
       })
       .then((newChallenge) => {
         onChallengeCreated(newChallenge);
-        setFormData({ title: '', description: '', start_date: '', end_date: '' }); // reset form
+        resetForm();
       })
       .catch((err) => {
-        alert("Could not create challenge. Make sure all required fields are filled.");
+        alert("Could not create challenge.");
         console.error(err);
-      });
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form">
-      <input
-        name="title"
-        type="text"
-        value={formData.title}
-        onChange={handleChange}
-        placeholder="Challenge Title"
-        className="input"
-        required
-      />
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Description"
-        className="input"
-        required
-      />
-      <input
-        name="start_date"
-        type="date"
-        value={formData.start_date}
-        onChange={handleChange}
-        className="input"
-        required
-      />
-      <input
-        name="end_date"
-        type="date"
-        value={formData.end_date}
-        onChange={handleChange}
-        className="input"
-      />
-      <button type="submit" className="submit-btn">Add Challenge</button>
-    </form>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={ChallengeSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form className="form">
+          <Field name="title" placeholder="Challenge Title" className="input" />
+          <ErrorMessage name="title" component="div" className="error-message" />
+
+          <Field
+            name="description"
+            as="textarea"
+            placeholder="Description"
+            className="input"
+          />
+          <ErrorMessage name="description" component="div" className="error-message" />
+
+          <Field name="start_date" type="date" className="input" />
+          <ErrorMessage name="start_date" component="div" className="error-message" />
+
+          <Field name="end_date" type="date" className="input" />
+          <ErrorMessage name="end_date" component="div" className="error-message" />
+
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            Add Challenge
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 }
 
