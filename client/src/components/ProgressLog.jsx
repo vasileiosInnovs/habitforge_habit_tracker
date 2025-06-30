@@ -18,8 +18,12 @@ function ProgressLog() {
     })
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
-        setLogs(data);
-        setStreakDates(calculateStreakDates(data));
+        setLogs(data || []);
+        setStreakDates(calculateStreakDates(data || []));
+      })
+      .catch((err) => {
+        console.error("Failed to fetch logs:", err);
+        setLogs([]);
       });
   }, [refreshKey]);
 
@@ -77,43 +81,49 @@ function ProgressLog() {
         </button>
       </div>
 
-      {Object.entries(grouped.byHabit).map(([name, entries]) => (
-        <div className="habit-log-block" key={name}>
-          <h4>Habit: {name}</h4>
-          <ul>
-            {entries.map((log, i) => (
-              <li
-                key={i}
-                className={`log-entry ${
-                  log.completed ? "log-completed" : "log-pending"
-                }`}
-              >
-                {log.completed ? "✅" : "❌"}{" "}
-                {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {logs.length === 0 ? (
+        <p className="no-logs-msg">No progress logs found yet. Start by completing a habit! 📝</p>
+      ) : (
+        <>
+          {Object.entries(grouped.byHabit).map(([name, entries]) => (
+            <div className="habit-log-block" key={name}>
+              <h4>Habit: {name}</h4>
+              <ul>
+                {entries.map((log, i) => (
+                  <li
+                    key={i}
+                    className={`log-entry ${
+                      log.status === "Completed✅" ? "log-completed" : "log-pending"
+                    }`}
+                  >
+                    {log.status === "Completed✅" ? "✅" : "❌"}{" "}
+                    {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
-      {Object.entries(grouped.byChallenge).map(([name, entries]) => (
-        <div className="challenge-log-block" key={name}>
-          <h4>Challenge: {name}</h4>
-          <ul>
-            {entries.map((log, i) => (
-              <li
-                key={i}
-                className={`log-entry ${
-                  log.completed ? "log-completed" : "log-pending"
-                }`}
-              >
-                {log.completed ? "✅" : "❌"}{" "}
-                {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+          {Object.entries(grouped.byChallenge).map(([name, entries]) => (
+            <div className="challenge-log-block" key={name}>
+              <h4>Challenge: {name}</h4>
+              <ul>
+                {entries.map((log, i) => (
+                  <li
+                    key={i}
+                    className={`log-entry ${
+                      log.status === "Completed✅" ? "log-completed" : "log-pending"
+                    }`}
+                  >
+                    {log.status === "Completed✅" ? "✅" : "❌"}{" "}
+                    {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </>
+      )}
 
       {streakDates.length > 0 && (
         <div className="streak-display">
