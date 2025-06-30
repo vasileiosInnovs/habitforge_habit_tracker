@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/forms.css";
+import "../styles/Forms.css";
 import "../styles/Lists.css";
 
 function HabitForm() {
