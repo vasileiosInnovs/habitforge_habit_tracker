@@ -76,18 +76,6 @@ class HabitList(Resource):
             db.session.add(new_habit)
             db.session.commit()
 
-            # Add progress log
-            new_log = ProgressLog(
-                user_id=user_id,
-                habit_id=new_habit.id,
-                date=datetime.date.today(),
-                time=datetime.datetime.now().time(),
-                status="created",
-                note="Habit was added"
-            )
-            db.session.add(new_log)
-            db.session.commit()
-
             response = {
                 'id': new_habit.id,
                 'name': new_habit.name,
