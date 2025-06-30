@@ -44,7 +44,6 @@ class HabitList(Resource):
         
     def post(self):
         user_id = session.get("user_id")
-
         if not user_id:
             return {"error": "Unauthorized. Please log in."}, 401
 
@@ -77,13 +76,12 @@ class HabitList(Resource):
             db.session.add(new_habit)
             db.session.commit()
 
-            today = datetime.date.today()
-            now = datetime.datetime.now().time()
+            # Add progress log
             new_log = ProgressLog(
                 user_id=user_id,
                 habit_id=new_habit.id,
-                date=today,
-                time=now,
+                date=datetime.date.today(),
+                time=datetime.datetime.now().time(),
                 status="created",
                 note="Habit was added"
             )
