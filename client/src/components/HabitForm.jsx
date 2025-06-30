@@ -5,12 +5,17 @@ import "../styles/Lists.css";
 function HabitForm() {
   const [formData, setFormData] = useState({ name: "", frequency: "", description: "" });
   const [habits, setHabits] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingHabitId, setEditingHabitId] = useState(null);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
       credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch habits");
+        return res.json();
+      })
       .then(setHabits)
       .catch((err) => console.error("Failed to load habits:", err));
   }, []);
@@ -20,20 +25,48 @@ function HabitForm() {
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-  fetch(`${process.env.REACT_APP_API_URL}/habits`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ ...formData, completed: false }),
-  })
-    .then((res) => res.json())
-    .then((newHabit) => {
-      setHabits([...habits, newHabit]);
-      setFormData({ name: "", frequency: "", description: "" });
-    });
-};
+    e.preventDefault();
+    const url = `${process.env.REACT_APP_API_URL}/habits${isEditing ? `/${editingHabitId}` : ""}`;
+    const method = isEditing ? "PATCH" : "POST";
 
+    fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ ...formData, completed: false }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to save habit");
+        return res.json();
+      })
+      .then((updatedHabit) => {
+        if (isEditing) {
+          setHabits(habits.map((h) => (h.id === editingHabitId ? updatedHabit : h)));
+          setIsEditing(false);
+          setEditingHabitId(null);
+        } else {
+          setHabits([...habits, updatedHabit]);
+        }
+        setFormData({ name: "", frequency: "", description: "" });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleEdit = (habit) => {
+    setIsEditing(true);
+    setEditingHabitId(habit.id);
+    setFormData({
+      name: habit.name,
+      frequency: habit.frequency,
+      description: habit.description,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingHabitId(null);
+    setFormData({ name: "", frequency: "", description: "" });
+  };
 
   const handleDelete = (id) => {
     fetch(`${process.env.REACT_APP_API_URL}/habits/${id}`, {
@@ -62,7 +95,7 @@ function HabitForm() {
 
   return (
     <div className="habit-section">
-      <h1 className="section-title">Your Habits</h1>
+      <h1 className="section-title">{isEditing ? "Edit Habit" : "Your Habits"}</h1>
 
       <form onSubmit={handleSubmit} className="form">
         <input
@@ -70,20 +103,33 @@ function HabitForm() {
           value={formData.name}
           onChange={handleChange}
           placeholder="Habit Name"
+          required
         />
         <input
           name="frequency"
           value={formData.frequency}
           onChange={handleChange}
           placeholder="e.g. Daily, Weekly"
+          required
         />
         <input
           name="description"
           value={formData.description}
           onChange={handleChange}
           placeholder="Description"
+          required
         />
-        <button type="submit">Add Habit</button>
+
+        <div className="form-buttons">
+          {isEditing && (
+            <button type="button" onClick={handleCancelEdit} className="cancel-btn">
+              Cancel
+            </button>
+          )}
+          <button type="submit" className="submit-btn">
+            {isEditing ? "Update Habit" : "Add Habit"}
+          </button>
+        </div>
       </form>
 
       {habits.length > 0 ? (
@@ -93,8 +139,9 @@ function HabitForm() {
               <div className="habit-info">
                 <h3>{habit.name}</h3>
                 <p>Frequency: {habit.frequency}</p>
+                <p>{habit.description}</p>
               </div>
-              <div>
+              <div className="habit-buttons">
                 <button
                   className="mark-btn"
                   style={{ backgroundColor: habit.completed ? "#48bb78" : "#6ab04c" }}
@@ -107,6 +154,12 @@ function HabitForm() {
                   onClick={() => handleDelete(habit.id)}
                 >
                   Delete
+                </button>
+                <button
+                  className="mark-btn edit-btn"
+                  onClick={() => handleEdit(habit)}
+                >
+                  Edit
                 </button>
               </div>
             </li>

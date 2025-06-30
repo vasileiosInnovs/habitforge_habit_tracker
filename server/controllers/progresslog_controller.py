@@ -27,13 +27,13 @@ class ProgressLogList(Resource):
                 for log in logs:
                     log_dict = {
                         "id": log.id,
-                        "name": log.name,
                         "date": log.date,
                         "time": log.time,
                         "status": log.status,
                         "note": log.note,
                         "habit_id": log.habit_id,
-                        "challenge_id": log.challenge_id
+                        "challenge_id": log.challenge_id,
+                        "name": log.habit.name if log.habit else None
                     }
                     logs_list.append(log_dict)
 

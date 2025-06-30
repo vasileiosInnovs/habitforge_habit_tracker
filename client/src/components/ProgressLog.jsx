@@ -43,6 +43,17 @@ function ProgressLog() {
     return streak;
   }
 
+    function groupLogsByHabit(logs) {
+    const map = {};
+    for (let log of logs) {
+      const habitName = log.name || "Unknown Habit";
+      if (!map[habitName]) map[habitName] = [];
+      map[habitName].push(log);
+    }
+    return map;
+  }
+
+
   return (
     <div className="progress-log">
       {streakDates.length > 0 && (
@@ -75,11 +86,18 @@ function ProgressLog() {
         <h3 className="section-title">Your Progress Logs</h3>
         {logs.length > 0 ? (
           <ul className="log-list">
-            {logs.map((log, index) => (
-              <li key={index} className="log-item">
-                ✅ {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
-              </li>
-            ))}
+                    {Object.entries(groupLogsByHabit(logs)).map(([habit, entries]) => (
+          <div key={habit} className="habit-log-block">
+            <h4>{habit}</h4>
+            <ul className="log-list">
+              {entries.map((log, i) => (
+                <li key={i}>
+                  ✅ {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
           </ul>
         ) : (
           <p className="no-logs">No progress logs yet.</p>
