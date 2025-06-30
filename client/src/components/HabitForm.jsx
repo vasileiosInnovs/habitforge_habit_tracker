@@ -54,16 +54,14 @@ function HabitForm() {
       body: JSON.stringify({ completed: updated.completed }),
     }).then((res) => {
       if (res.ok) {
-        setHabits(
-          habits.map((h) => (h.id === habit.id ? updated : h))
-        );
+        setHabits(habits.map((h) => (h.id === habit.id ? updated : h)));
       }
     });
   };
 
   return (
-    <div className="myday">
-      <h1>Your Habits</h1>
+    <div className="habit-section">
+      <h1 className="section-title">Your Habits</h1>
 
       <form onSubmit={handleSubmit} className="form">
         <input
@@ -98,8 +96,7 @@ function HabitForm() {
                   {habit.completed ? "Completed" : "Mark Done"}
                 </button>
                 <button
-                  className="mark-btn"
-                  style={{ backgroundColor: "#e53e3e", marginLeft: "0.5rem" }}
+                  className="mark-btn delete-btn"
                   onClick={() => handleDelete(habit.id)}
                 >
                   Delete

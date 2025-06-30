@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import "../styles/Lists.css";
 
 function ProgressLog() {
   const [logs, setLogs] = useState([]);
   const [streakDates, setStreakDates] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/logs`)
+    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+      credentials: "include",
+    })
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch logs");
@@ -41,19 +44,15 @@ function ProgressLog() {
   }
 
   return (
-    <div className="">
+    <div className="progress-log">
       {streakDates.length > 0 && (
-        <div className="">
-          <h2 className="">
+        <div className="streak-display">
+          <h2 className="streak-title">
             🔥 {streakDates.length}-Day Streak
           </h2>
-          <div className="">
+          <div className="streak-icons">
             {streakDates.map((date, index) => (
-              <div
-                key={index}
-                className=""
-                title={date}
-              >
+              <div key={index} className="streak-dot" title={date}>
                 🔥
               </div>
             ))}
@@ -61,32 +60,29 @@ function ProgressLog() {
         </div>
       )}
 
-      <div className="">
-        <h2 className="">😌 Mood Today</h2>
-        <div className="">
-          {['😄','🙂','😐','😟','😩'].map((emoji) => (
-            <button key={emoji} className="" >{emoji}</button>
+      <div className="mood-selector">
+        <h2 className="section-title">😌 Mood Today</h2>
+        <div className="emoji-options">
+          {["😄", "🙂", "😐", "😟", "😩"].map((emoji) => (
+            <button key={emoji} className="emoji-button">
+              {emoji}
+            </button>
           ))}
         </div>
       </div>
 
-      <div className="">
-        <h3 className="">
-          Your Progress Logs
-        </h3>
+      <div className="log-section">
+        <h3 className="section-title">Your Progress Logs</h3>
         {logs.length > 0 ? (
-          <ul className="">
+          <ul className="log-list">
             {logs.map((log, index) => (
-              <li
-                key={index}
-                className=""
-              >
+              <li key={index} className="log-item">
                 ✅ {new Date(log.date).toLocaleDateString()} – {log.note || "No note"}
               </li>
             ))}
           </ul>
         ) : (
-          <p className="">No progress logs yet.</p>
+          <p className="no-logs">No progress logs yet.</p>
         )}
       </div>
     </div>
