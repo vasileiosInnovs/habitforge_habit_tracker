@@ -22,7 +22,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
-CORS(app, supports_credentials=True, origins=["https://habitforge.onrender.com"])
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "https://habitforge.onrender.com"}})
 api = Api(app)
 
 from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession

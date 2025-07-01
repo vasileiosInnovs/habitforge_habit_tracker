@@ -74,12 +74,15 @@ class ChallengeList(Resource):
             for c in challenges:
                 creator = User.query.get(c.user_id)
                 participant_count = Participation.query.filter_by(challenge_id=c.id).count()
-                user_joined = False
+                user_joined = None
 
                 if user_id:
-                    user_joined = Participation.query.filter_by(
-                        challenge_id=c.id, user_id=user_id
-                    ).first() is not None
+                    participation = Participation.query.filter_by(challenge_id=c.id, user_id=user_id).first()
+                    user_joined = participation is not None
+                    participation_id = participation.id if participation else None
+                
+                else:
+                    participation_id = None
 
                 result.append({
                     "id": c.id,
@@ -90,6 +93,7 @@ class ChallengeList(Resource):
                     "end_date": c.end_date.isoformat() if c.end_date else None,
                     "creator_name": creator.username if creator else "Unknown",
                     "user_joined": user_joined,
+                    participation_id: participation_id,
                 })
 
             return result, 200
