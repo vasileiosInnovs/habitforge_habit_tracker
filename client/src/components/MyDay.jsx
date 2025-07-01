@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import '../index.css';
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+import ChallengeForm from "./ChallengeForm";
 
 function MyDay() {
   const [habits, setHabits] = useState([]);
   const [joinedChallenges, setJoinedChallenges] = useState([]);
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [allChallenges, setAllChallenges] = useState([]);
+  const [createdChallenges, setCreatedChallenges] = useState([]);
+
 
   useEffect(() => {
   const loadData = async () => {
@@ -27,11 +31,24 @@ function MyDay() {
       setJoinedChallenges([]);
     }
 
+    try {
+      const resCreated = await fetch(`${process.env.REACT_APP_API_URL}/challenges/created`, {
+        credentials: "include",
+      });
+      if (resCreated.ok) {
+        const data = await resCreated.json();
+        setCreatedChallenges(data);
+      }
+    } catch (err) {
+      console.error("Error loading created challenges:", err);
+    }
+
     setLoading(false);
   };
 
   loadData();
 }, []);
+
 
 
   const fetchHabits = () => {
@@ -121,6 +138,33 @@ const formatDate = (dateString) => {
       return { status: 'active', text: 'Active', class: 'status-active' };
     }
   };
+
+  const handleEditChallenge = (challenge) => {
+  // You can open a modal, set a form state, or redirect
+  toast.info(`Edit challenge: ${challenge.title}`);
+  // Example: navigate(`/challenges/edit/${challenge.id}`) if using react-router
+};
+
+const handleDeleteChallenge = async (challengeId) => {
+  const confirmed = window.confirm("Are you sure you want to delete this challenge?");
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/challenges/${challengeId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error("Failed to delete challenge");
+
+    toast.success("Challenge deleted successfully!");
+    setCreatedChallenges(prev => prev.filter(c => c.id !== challengeId));
+  } catch (err) {
+    console.error("Delete error:", err);
+    toast.error("Error deleting challenge");
+  }
+};
+
 
   const activeChallenges = joinedChallenges.filter(c => getChallengeStatus(c).status === 'active');
 
@@ -269,6 +313,38 @@ const formatDate = (dateString) => {
           </div>
         </div>
       )}
+
+      {createdChallenges.length > 0 && (
+        <div className="challenges-section created-challenges-section">
+          <h2>🎯 Challenges You Created</h2>
+          <div className="challenges-grid">
+            {createdChallenges.map((challenge) => (
+              <div key={challenge.id} className="challenge-card created">
+                <h3>{challenge.title}</h3>
+                <p>{challenge.description}</p>
+                <p><strong>Participants:</strong> {challenge.participant_count || 0}</p>
+            
+                <div className="challenge-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEditChallenge(challenge)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteChallenge(challenge.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+
 
       {joinedChallenges.length > activeChallenges.length && (
         <div className="view-all-challenges">
