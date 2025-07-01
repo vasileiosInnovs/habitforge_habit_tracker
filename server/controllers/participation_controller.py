@@ -5,25 +5,28 @@ from datetime import datetime
 from server.models import db, Participation
 from server.app import api
 
+
 class ParticipationList(Resource):
     def get(self):
         user_id = session.get('user_id')
         if not user_id:
-            return jsonify({
-                'error': 'Unauthorized'
-            }), 401
-        
+            return jsonify({'error': 'Unauthorized'}), 401
         participations = Participation.query.filter_by(user_id=user_id).all()
-
         result = []
         for p in participations:
+            challenge = p.challenge
             result.append({
                 "id": p.id,
                 "challenge_id": p.challenge_id,
-                "join_date": p.join_date
+                "join_date": p.join_date.isoformat(),
+                "title": challenge.title,
+                "description": challenge.description,
+                "start_date": challenge.start_date.isoformat() if challenge.start_date else None,
+                "end_date": challenge.end_date.isoformat() if challenge.end_date else None,
+                "creator_name": challenge.user.username if challenge.user else "Unknown"
             })
+        return result, 200
 
-        return (result), 200
     
     def post(self):
         user_id = session.get('user_id')

@@ -83,12 +83,13 @@ function MyDay() {
   const handleLeaveChallenge = async (challengeId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/challenges/${challengeId}/participate`,
+        `${process.env.REACT_APP_API_URL}/participation/${participationId}`,
         {
           method: "DELETE",
           credentials: "include",
         }
       );
+
 
       if (!response.ok) {
         const errorData = await response.json();

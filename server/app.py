@@ -31,6 +31,7 @@ from server.controllers.challenge_controller import ChallengeList, ChallengesInd
 from server.controllers.progresslog_controller import ProgressLogList, Log
 from server.controllers.participation_controller import ParticipationList, ParticipationIndex
 from server.controllers.user import Profile
+from server.controllers.participation_controller import JoinChallengeForm
 
 api.add_resource(SignUp, '/signup')
 api.add_resource(Login, '/login')
@@ -42,7 +43,6 @@ api.add_resource(HabitByID, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
-api.add_resource(ChallengeParticipation, '/challenges/<int:challenge_id>/participate')
 api.add_resource(MyDayChallenges, '/myday/challenges')
 api.add_resource(UserCreatedChallenges, '/challenges/created')
 

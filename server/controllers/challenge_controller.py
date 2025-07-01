@@ -153,68 +153,6 @@ class ChallengesIndex(Resource):
 
         return make_response(jsonify({'message': 'Challenge successfully deleted.'}), 204)
 
-        
-class ChallengeParticipation(Resource):
-    def post(self, challenge_id):
-        """Join a challenge"""
-        user_id = session.get("user_id")
-        if not user_id:
-            return {"error": "Unauthorized. Please log in."}, 401
-
-        challenge = Challenge.query.get(challenge_id)
-        if not challenge:
-            return {"error": "Challenge not found"}, 404
-
-        if challenge.user_id == user_id:
-            return {"error": "You cannot join your own challenge"}, 400
-
-        existing_participation = Participation.query.filter_by(
-            challenge_id=challenge_id, 
-            user_id=user_id
-        ).first()
-        
-        if existing_participation:
-            return {"error": "You have already joined this challenge"}, 400
-        
-        data = request.get_json()
-
-        try:
-            participation = Participation(
-                challenge_id=challenge_id,
-                user_id=user_id,
-                join_date=datetime.now()
-            )
-            
-            db.session.add(participation)
-            db.session.commit()
-            
-            return {"message": "Successfully joined challenge"}, 201
-            
-        except Exception as e:
-            db.session.rollback()
-            return {"error": str(e)}, 500
-
-    def delete(self, challenge_id):
-        """Leave a challenge"""
-        user_id = session.get("user_id")
-        if not user_id:
-            return {"error": "Unauthorized"}, 401
-
-        participation = Participation.query.filter_by(
-            challenge_id=challenge_id, 
-            user_id=user_id
-        ).first()
-        
-        if not participation:
-            return {"error": "You are not participating in this challenge"}, 404
-
-        try:
-            db.session.delete(participation)
-            db.session.commit()
-            return {"message": "Successfully left challenge"}, 200
-        except Exception as e:
-            db.session.rollback()
-            return {"error": "Failed to leave challenge"}, 500
 
 class MyDayChallenges(Resource):
     def get(self):
@@ -235,6 +173,7 @@ class MyDayChallenges(Resource):
                     "id": challenge.id,
                     "title": challenge.title,
                     "description": challenge.description,
+                    "participation_id": participation.id,
                     "start_date": challenge.start_date.isoformat() if challenge.start_date else None,
                     "end_date": challenge.end_date.isoformat() if challenge.end_date else None,
                     "creator_name": creator.username if creator else "Unknown",
