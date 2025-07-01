@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ProtectedRoute from './components/ProtectedRoute';
 import NavBar from './components/NavBar';
-import JoinChallengeForm from "./components/JoinChallengeForm";
 import ProgressLog from "./components/ProgressLog";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignUpForm";
