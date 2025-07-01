@@ -13,6 +13,7 @@ class ChallengeList(Resource):
             return {"error": "Unauthorized. Please log in."}, 401
 
         data = request.get_json()
+        print("Received data:", data)
 
         title = data.get("title")
         description = data.get("description")
@@ -31,11 +32,14 @@ class ChallengeList(Resource):
             return {"errors": errors}, 422
 
         try:
+            start_date = datetime.fromisoformat(start_date)
+            end_date = datetime.fromisoformat(end_date) if end_date else None
+
             new_challenge = Challenge(
                 title=title,
                 description=description,
-                start_date=datetime.fromisoformat(start_date),
-                end_date=datetime.fromisoformat(end_date) if end_date else None,
+                start_date=start_date,
+                end_date=end_date,
                 user_id=user_id,
             )
 
@@ -56,6 +60,7 @@ class ChallengeList(Resource):
             }, 201
 
         except Exception as e:
+            print("Challenge creation failed:", e)
             db.session.rollback()
             return {"error": str(e)}, 422
 
