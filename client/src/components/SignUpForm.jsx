@@ -73,15 +73,15 @@ function SignupForm({ onSignup }) {
                     <ErrorMessage name="email" component="div"  className="field-error" />
               
                   <label>Password</label>
-                    <Field name="password" type="password" className="form-input" />
+                    <Field name="password" type="password" className="form-input" placeholder="Enter password"/>
                     <ErrorMessage name="password" component="div" className="field-error" />
               
                   <label>Image URL</label>
-                    <Field name="image_url" className="form-input" />
+                    <Field name="image_url" className="form-input" placeholder="Enter URL "/>
                     <ErrorMessage name="image_url" component="div" className="field-error" />
               
                   <label>Bio</label>
-                    <Field name="bio" as="textarea" className="form-input" />
+                    <Field name="bio" as="textarea" className="form-input" placeholder="Enter bio" />
                     <ErrorMessage name="bio" component="div" className="field-error" />
               
                     {errors.submit && <div className="error">{errors.submit}</div>}

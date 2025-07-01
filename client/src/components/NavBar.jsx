@@ -28,7 +28,7 @@ function NavBar({ user, onLogout }) {
         <nav className="navbar">
             <div className="navbar-container-left">
               <div className="navbar-logo">
-                  <img src="https://img.freepik.com/premium-vector/habit-icon-vector-image-can-be-used-lifestyles_120816-219924.jpg" alt="Change yourself" class="logo-image" />
+                  <img src="https://img.freepik.com/premium-vector/habit-icon-vector-image-can-be-used-lifestyles_120816-219924.jpg" alt="Change yourself" className="logo-image" />
                   <span>HabitForge</span>
               </div>
             </div>
