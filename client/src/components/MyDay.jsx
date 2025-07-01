@@ -380,6 +380,7 @@ function calculateStreak(logDates) {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
+                console.log("Submitting PATCH for ID:", challengeToEdit.id);
                 try {
                   const response = await fetch(`${process.env.REACT_APP_API_URL}/challenges/${challengeToEdit.id}`, {
                     method: "PATCH",
@@ -418,9 +419,10 @@ function calculateStreak(logDates) {
               />
               <textarea
                 value={challengeToEdit.description}
-                onChange={(e) =>
-                  setChallengeToEdit({ ...challengeToEdit, description: e.target.value })
-                }
+                onChange={(e) => {
+                  console.log("Title changed:", e.target.value);
+                  setChallengeToEdit({ ...challengeToEdit, description: e.target.value });
+                }}
                 placeholder="Description"
                 required
               />
