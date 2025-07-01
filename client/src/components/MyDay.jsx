@@ -172,7 +172,22 @@ const handleJoinChallenge = async (challengeId) => {
     toast.error(err.message);
   }
 };
-
+const handleLog = (habitId) => {
+    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ habit_id: habitId }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Log failed");
+        return res.json();
+      })
+      .then(() => {
+        fetchHabits();
+      })
+      .catch((err) => console.error("Error logging habit", err));
+  };
 
 const handleDeleteChallenge = async (challengeId) => {
   const confirmed = window.confirm("Are you sure you want to delete this challenge?");
