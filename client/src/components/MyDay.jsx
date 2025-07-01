@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import '../index.css';
 
+import { toast } from "react-toastify";
+
 function MyDay() {
   const [habits, setHabits] = useState([]);
   const [joinedChallenges, setJoinedChallenges] = useState([]);
@@ -184,7 +186,7 @@ const formatDate = (dateString) => {
           </ul>
         )}
       </div>
-      
+
       {activeChallenges.length > 0 && (
         <div className="challenges-section">
           <h2>🏆 Active Challenges</h2>

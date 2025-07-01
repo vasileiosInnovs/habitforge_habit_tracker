@@ -27,7 +27,7 @@ api = Api(app)
 
 from server.controllers.auth_controller import SignUp, Login, Logout, CheckSession
 from server.controllers.habit_controller import HabitList, HabitByID
-from server.controllers.challenge_controller import ChallengeList, ChallengesIndex
+from server.controllers.challenge_controller import ChallengeList, ChallengesIndex, ChallengeParticipation, MyDayChallenges
 from server.controllers.progresslog_controller import ProgressLogList, Log
 from server.controllers.participation_controller import ParticipationList, ParticipationIndex
 from server.controllers.user import Profile
@@ -42,6 +42,9 @@ api.add_resource(HabitByID, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
+api.add_resource(ChallengeParticipation, '/challenges/<int:challenge_id>/participate')
+api.add_resource(MyDayChallenges, '/myday/challenges')
+
 
 api.add_resource(ProgressLogList, '/logs')
 api.add_resource(Log, '/log/<int:id>')
