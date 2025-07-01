@@ -14,6 +14,7 @@ import MyDay from "./components/MyDay";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Footer from "./components/Footer"
+import JoinChallengeForm from "./components/JoinChallengeForm";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -82,14 +83,11 @@ function App() {
           }
         />
 
-        <Route
-          path="/participations"
-          element={
-            <ProtectedRoute user={user}>
-              <JoinChallengeForm />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/myday" element={
+          <ProtectedRoute user={user}>
+            <JoinChallengeForm />
+          </ProtectedRoute>
+        } />
 
         <Route
           path="/profile"

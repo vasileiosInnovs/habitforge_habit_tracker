@@ -80,10 +80,10 @@ function MyDay() {
     });
   };
 
-  const handleLeaveChallenge = async (challengeId) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/participation/${participationId}`,
+  const handleLeaveChallenge = async (participationId, challengeId) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/participation/${participationId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -141,9 +141,7 @@ const formatDate = (dateString) => {
   };
 
   const handleEditChallenge = (challenge) => {
-  // You can open a modal, set a form state, or redirect
   toast.info(`Edit challenge: ${challenge.title}`);
-  // Example: navigate(`/challenges/edit/${challenge.id}`) if using react-router
 };
 
 const handleDeleteChallenge = async (challengeId) => {
@@ -302,7 +300,7 @@ const handleDeleteChallenge = async (challengeId) => {
                       📊 Log Progress
                     </button>
                     <button 
-                      onClick={() => handleLeaveChallenge(challenge.id)}
+                      onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
                       className="leave-btn secondary"
                     >
                       Leave
