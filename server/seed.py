@@ -1,4 +1,4 @@
-from server.app import app, bcrypt
+from server.app import app
 from server.models import *
 from faker import Faker
 from random import choice, randint, sample
@@ -85,40 +85,10 @@ with app.app_context():
 
     db.session.commit()
 
-    print('Participations...')
-    reasons_for_joining = [
-    "To build consistency",
-    "Seeking accountability",
-    "Joining friends",
-    "To improve focus",
-    "To try something new",
-    "Inspired by success stories",
-    "To track my progress",
-    "To challenge myself",
-    "Looking for motivation",
-    "To form healthy habits"
-    ]
-
-    personal_goals = [
-    "Read 10 pages daily",
-    "Exercise 3 times a week",
-    "Wake up by 6 AM",
-    "Drink 2 liters of water",
-    "Write a journal entry each night",
-    "Meditate for 10 minutes daily",
-    "Run 5 km by end of the month",
-    "Cook all meals at home for 2 weeks",
-    "Limit phone use to 2 hours/day",
-    "Complete 30-day yoga routine"
-    ]
-
-
     for user in users:
-        joined_challenges = sample(challenges, randint(1, 3))
         join_dates = [fake.date_between(start_date='-30d', end_date='today') for _ in range(10)]
-        for challenge in joined_challenges:
-            participation = Participation(user_id=user.id, challenge_id=challenge.id, reason_for_joining=choice(reasons_for_joining), personal_goal=choice(personal_goals), join_date=choice(join_dates))
-            db.session.add(participation)
+        participation = Participation(user_id=user.id, challenge_id=challenge.id, join_date=choice(join_dates))
+        db.session.add(participation)
 
     db.session.commit()
 

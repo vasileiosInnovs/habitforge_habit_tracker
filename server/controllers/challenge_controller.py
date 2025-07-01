@@ -175,8 +175,6 @@ class ChallengeParticipation(Resource):
             participation = Participation(
                 challenge_id=challenge_id,
                 user_id=user_id,
-                reason_for_joining=data.get("reason_for_joining"),
-                personal_goal=data.get("personal_goal"),
                 join_date=datetime.now()
             )
             

@@ -41,8 +41,7 @@ class HabitList(Resource):
                 'name': habit.name,
                 'frequency': habit.frequency,
                 'description': habit.description,
-                'user_id': habit.user_id,
-                'created_at': habit.created_at.isoformat() if habit.created_at else None
+                'user_id': habit.user_id
             }
             
             return habit_dict, 20

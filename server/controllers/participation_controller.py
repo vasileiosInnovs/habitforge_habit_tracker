@@ -20,8 +20,6 @@ class ParticipationList(Resource):
             result.append({
                 "id": p.id,
                 "challenge_id": p.challenge_id,
-                "reason_for_joining": p.reason_for_joining,
-                "personal_goal": p.personal_goal,
                 "join_date": p.join_date
             })
 
@@ -36,8 +34,6 @@ class ParticipationList(Resource):
         
         data = request.get_json()
         challenge_id = data.get('challenge_id')
-        reason_for_joining = data.get('reason_for_joining', '')
-        personal_goal = data.get('personal_goal', '')
 
         if not challenge_id:
             return jsonify({'error': 'Challenge ID is required'}), 422
@@ -49,8 +45,6 @@ class ParticipationList(Resource):
         new_participation = Participation(
             user_id=user_id,
             challenge_id=challenge_id,
-            reason_for_joining=reason_for_joining,
-            personal_goal=personal_goal,
             join_date=datetime.now()
         )
 
@@ -90,17 +84,12 @@ class ParticipationIndex(Resource):
         if not participation or participation.user_id != user_id:
             return jsonify({'error': 'Participation not found'}), 404
 
-        data = request.get_json()
-        participation.reason_for_joining = data.get('reason_for_joining', participation.reason_for_joining)
-        participation.personal_goal = data.get('personal_goal', participation.personal_goal)
 
         try:
             db.session.commit()
             return jsonify({
                 'message': 'Participation updated',
-                'id': participation.id,
-                'reason_for_joining': participation.reason_for_joining,
-                'personal_goal': participation.personal_goal
+                'id': participation.id
             }), 200
 
         
