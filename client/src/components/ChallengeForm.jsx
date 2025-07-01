@@ -12,62 +12,66 @@ const ChallengeSchema = Yup.object().shape({
     .nullable()
 });
 
-function ChallengeForm({ onChallengeCreated = () => {} }) {
+function ChallengeForm({
+  onChallengeCreated = () => {},
+  challengeToEdit = null,
+  onUpdateChallenge = () => {},
+}) {
+  const isEdit = !!challengeToEdit;
+
   const initialValues = {
-    title: '',
-    description: '',
-    start_date: '',
-    end_date: ''
+    title: challengeToEdit?.title || '',
+    description: challengeToEdit?.description || '',
+    start_date: challengeToEdit?.start_date?.slice(0, 10) || '',
+    end_date: challengeToEdit?.end_date?.slice(0, 10) || ''
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    console.log("Raw form values:", values);
-    console.log("Start date value:", values.start_date);
-    console.log("Start date type:", typeof values.start_date);
-    console.log("End date value:", values.end_date);
-    console.log("End date type:", typeof values.end_date);
-
     const challengeData = {
       title: values.title,
       description: values.description,
       start_date: values.start_date,
-      end_date: values.end_date || null 
+      end_date: values.end_date || null
     };
 
-    console.log("Processed challenge data:", challengeData);
-    console.log("JSON stringified data:", JSON.stringify(challengeData));
+    const url = isEdit
+      ? `${process.env.REACT_APP_API_URL}/challenges/${challengeToEdit.id}`
+      : `${process.env.REACT_APP_API_URL}/challenges`;
 
-    fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
-      method: "POST",
+    const method = isEdit ? "PATCH" : "POST";
+
+    fetch(url, {
+      method: method,
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(challengeData)
     })
       .then((r) => {
-        console.log("Response status:", r.status);
-        console.log("Response ok:", r.ok);
         if (!r.ok) {
           return r.json().then(errorData => {
-            console.log("Error response data:", errorData);
-            throw new Error(`Failed to create challenge: ${JSON.stringify(errorData)}`);
+            throw new Error(`Failed to ${isEdit ? "update" : "create"} challenge: ${JSON.stringify(errorData)}`);
           });
         }
         return r.json();
       })
-      .then((newChallenge) => {
-        console.log("Challenge created successfully:", newChallenge);
-        onChallengeCreated(newChallenge);
-        resetForm();
+      .then((resultChallenge) => {
+        if (isEdit) {
+          onUpdateChallenge(resultChallenge);
+        } else {
+          onChallengeCreated(resultChallenge);
+          resetForm();
+        }
       })
       .catch((err) => {
-        console.error("Full error object:", err);
-        alert("Could not create challenge. Check console for details.");
+        console.error(err);
+        alert(`Could not ${isEdit ? "update" : "create"} challenge. Check console for details.`);
       })
       .finally(() => setSubmitting(false));
   };
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={ChallengeSchema}
       onSubmit={handleSubmit}
@@ -92,7 +96,7 @@ function ChallengeForm({ onChallengeCreated = () => {} }) {
           <ErrorMessage name="end_date" component="div" className="error-message" />
 
           <button type="submit" className="submit-btn" disabled={isSubmitting}>
-            Add Challenge
+            {isEdit ? "Update Challenge" : "Add Challenge"}
           </button>
         </Form>
       )}

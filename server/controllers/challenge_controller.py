@@ -108,6 +108,9 @@ class ChallengesIndex(Resource):
         if not challenge:
             return jsonify({"error": "Challenge not found"}), 404
 
+        if challenge.user_id != user_id:
+            return jsonify({"error": "You are not the creator of this challenge"}), 403
+
         data = request.get_json()
 
         if "title" in data:
@@ -134,18 +137,22 @@ class ChallengesIndex(Resource):
             return jsonify({"error": "Failed to update challenge."}), 500
 
     def delete(self, id):
-        if session.get('user_id'):
-            challenge = Challenge.query.get(id)
+        user_id = session.get("user_id")
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
 
-            if not challenge:
-                return make_response(jsonify({'error': 'Challenge not found'}), 404)
+        challenge = Challenge.query.get(id)
+        if not challenge:
+            return make_response(jsonify({'error': 'Challenge not found'}), 404)
 
-            db.session.delete(challenge)
-            db.session.commit()
+        if challenge.user_id != user_id:
+            return make_response(jsonify({'error': 'You are not the creator of this challenge'}), 403)
 
-            return make_response(jsonify({'message': 'Challenge successfully deleted.'}), 204)
-        else:
-            return make_response(jsonify({'error': 'Unauthorized'}), 401)
+        db.session.delete(challenge)
+        db.session.commit()
+
+        return make_response(jsonify({'message': 'Challenge successfully deleted.'}), 204)
+
         
 class ChallengeParticipation(Resource):
     def post(self, challenge_id):
@@ -236,5 +243,31 @@ class MyDayChallenges(Resource):
                 joined_challenges.append(challenge_data)
 
             return joined_challenges, 200
+        except Exception as e:
+            return {"error": str(e)}, 500
+        
+class UserCreatedChallenges(Resource):
+    def get(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"error": "Unauthorized"}, 401
+
+        try:
+            challenges = Challenge.query.filter_by(user_id=user_id).all()
+
+            challenge_list = []
+            for c in challenges:
+                participant_count = Participation.query.filter_by(challenge_id=c.id).count()
+                challenge_data = {
+                    "id": c.id,
+                    "title": c.title,
+                    "description": c.description,
+                    "start_date": c.start_date.isoformat() if c.start_date else None,
+                    "end_date": c.end_date.isoformat() if c.end_date else None,
+                    "participant_count": participant_count,
+                }
+                challenge_list.append(challenge_data)
+
+            return challenge_list, 200
         except Exception as e:
             return {"error": str(e)}, 500
