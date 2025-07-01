@@ -50,8 +50,8 @@ class ChallengeList(Resource):
                 "user_id": new_challenge.user_id,
                 "title": new_challenge.title,
                 "description": new_challenge.description,
-                "start_date": new_challenge.start_date,
-                "end_date": new_challenge.end_date,
+                "start_date": new_challenge.start_date.isoformat() if new_challenge.start_date else None,
+                "end_date": new_challenge.end_date.isoformat() if new_challenge.end_date else None,
                 "creator_name": creator.username if creator else "Unknown",
                 "participant_count": 0
             }

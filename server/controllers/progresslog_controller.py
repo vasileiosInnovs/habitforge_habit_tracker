@@ -20,7 +20,7 @@ class ProgressLogList(Resource):
             if challenge_id:
                 query = query.filter_by(challenge_id=challenge_id)
 
-            logs = query.all()
+            logs = ProgressLog.query.all()
 
             if logs:                
                 logs_list = []
