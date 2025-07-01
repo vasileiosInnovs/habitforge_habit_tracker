@@ -27,46 +27,46 @@ function ChallengeForm({
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    const challengeData = {
-      title: values.title,
-      description: values.description,
-      start_date: values.start_date,
-      end_date: values.end_date || null
-    };
+  const challengeData = {
+    title: values.title,
+    description: values.description,
+    start_date: values.start_date,
+    end_date: values.end_date || null
+  };
 
-    const url = isEdit
-      ? `${process.env.REACT_APP_API_URL}/challenges/${challengeToEdit.id}`
-      : `${process.env.REACT_APP_API_URL}/challenges`;
+  const url = isEdit
+    ? `${process.env.REACT_APP_API_URL}/challenges/${challengeToEdit.id}`
+    : `${process.env.REACT_APP_API_URL}/challenges`;
 
-    const method = isEdit ? "PATCH" : "POST";
+  const method = isEdit ? "PATCH" : "POST";
 
-    fetch(url, {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(challengeData)
+  fetch(url, {
+    method: method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(challengeData)
+  })
+    .then((r) => {
+      if (!r.ok) {
+        return r.json().then(errorData => {
+          throw new Error(`Failed to ${isEdit ? "update" : "create"} challenge: ${JSON.stringify(errorData)}`);
+        });
+      }
+      return r.json();
     })
-      .then((r) => {
-        if (!r.ok) {
-          return r.json().then(errorData => {
-            throw new Error(`Failed to ${isEdit ? "update" : "create"} challenge: ${JSON.stringify(errorData)}`);
-          });
-        }
-        return r.json();
-      })
-      .then((resultChallenge) => {
-        if (isEdit) {
-          onUpdateChallenge(resultChallenge);
-        } else {
-          onChallengeCreated(resultChallenge);
-          resetForm();
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert(`Could not ${isEdit ? "update" : "create"} challenge. Check console for details.`);
-      })
-      .finally(() => setSubmitting(false));
+    .then((resultChallenge) => {
+      if (isEdit) {
+        onUpdateChallenge(resultChallenge);
+      } else {
+        onChallengeCreated(resultChallenge);
+        resetForm();
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      alert(`Could not ${isEdit ? "update" : "create"} challenge. Check console for details.`);
+    })
+    .finally(() => setSubmitting(false));
   };
 
   return (

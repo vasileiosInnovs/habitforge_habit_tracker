@@ -8,9 +8,11 @@ function MyDay() {
   const [joinedChallenges, setJoinedChallenges] = useState([]);
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [allChallenges, setAllChallenges] = useState([]);
   const [createdChallenges, setCreatedChallenges] = useState([]);
   const [challengeStreaks, setChallengeStreaks] = useState({});
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [challengeToEdit, setChallengeToEdit] = useState(null);
+
 
   const fetchChallengeLogs = async () => {
     try {
@@ -164,6 +166,8 @@ const formatDate = (dateString) => {
   };
 
   const handleEditChallenge = (challenge) => {
+  setChallengeToEdit(challenge);
+  setShowEditModal(true);
   toast.info(`Edit challenge: ${challenge.title}`);
 };
 const handleJoinChallenge = async (challengeId) => {
@@ -340,7 +344,102 @@ function calculateStreak(logDates) {
         )}
       </div>
 
-      {activeChallenges.length > 0 && (
+      {createdChallenges.length > 0 && (
+        <div className="challenges-section created-challenges-section">
+          <h2>🎯 Challenges You Created</h2>
+          <div className="challenges-grid">
+            {createdChallenges.map((challenge) => (
+              <div key={challenge.id} className="challenge-card created">
+                <h3>{challenge.title}</h3>
+                <p>{challenge.description}</p>
+                <p><strong>Participants:</strong> {challenge.participant_count || 0}</p>
+            
+                <div className="challenge-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEditChallenge(challenge)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteChallenge(challenge.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {showEditModal && challengeToEdit && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Edit Challenge</h2>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  const response = await fetch(`${process.env.REACT_APP_API_URL}/challenges/${challengeToEdit.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                      title: challengeToEdit.title,
+                      description: challengeToEdit.description,
+                    }),
+                  });
+                
+                  if (!response.ok) throw new Error("Failed to update challenge");
+                
+                  const updated = await response.json();
+  
+                  setCreatedChallenges((prev) =>
+                    prev.map((c) => (c.id === updated.id ? updated : c))
+                  );
+                
+                  toast.success("Challenge updated!");
+                  setShowEditModal(false);
+                } catch (err) {
+                  console.error("Update error:", err);
+                  toast.error("Could not update challenge");
+                }
+              }}
+            >
+              <input
+                type="text"
+                value={challengeToEdit.title}
+                onChange={(e) =>
+                  setChallengeToEdit({ ...challengeToEdit, title: e.target.value })
+                }
+                placeholder="Title"
+                required
+              />
+              <textarea
+                value={challengeToEdit.description}
+                onChange={(e) =>
+                  setChallengeToEdit({ ...challengeToEdit, description: e.target.value })
+                }
+                placeholder="Description"
+                required
+              />
+              <div className="modal-actions">
+                <button type="submit">Save</button>
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+
+    {activeChallenges.length > 0 && (
         <div className="challenges-section">
           <h2>🏆 Active Challenges</h2>
           <div className="challenges-grid">
@@ -429,37 +528,6 @@ function calculateStreak(logDates) {
           </div>
         </div>
       )}
-
-      {createdChallenges.length > 0 && (
-        <div className="challenges-section created-challenges-section">
-          <h2>🎯 Challenges You Created</h2>
-          <div className="challenges-grid">
-            {createdChallenges.map((challenge) => (
-              <div key={challenge.id} className="challenge-card created">
-                <h3>{challenge.title}</h3>
-                <p>{challenge.description}</p>
-                <p><strong>Participants:</strong> {challenge.participant_count || 0}</p>
-            
-                <div className="challenge-actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditChallenge(challenge)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteChallenge(challenge.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
 
 
       {joinedChallenges.length > activeChallenges.length && (
