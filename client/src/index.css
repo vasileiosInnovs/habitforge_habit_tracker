@@ -830,16 +830,6 @@ body::before {
   min-height: 100vh;
 }
 
-.profile-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
-  padding: 2rem;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-}
-
 .profile-avatar {
   width: 100px;
   height: 100px;
@@ -2055,19 +2045,19 @@ button:active {
   font-size: 2rem;
   font-weight: bold;
   margin: 0.5rem 0;
-  color: var(--fresh-leaf);
+  color: darkgreen;
 }
 
 .profile-email {
   font-size: 1rem;
-  color: var(--soft-cream);
+  color: rgb(3, 94, 3);
 }
 
 .profile-bio {
   font-style: italic;
   margin-top: 1rem;
   margin-bottom: 2rem;
-  color: var(--clean-white);
+  color: darkgreen;
 }
 
 .profile-form label {
