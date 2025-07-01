@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/MyDay.css";
+import './index.css';
 
 function MyDay() {
   const [habits, setHabits] = useState([]);

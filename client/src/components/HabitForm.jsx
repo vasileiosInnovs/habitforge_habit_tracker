@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/Forms.css";
-import "../styles/Lists.css";
+import './index.css';
 import { toast } from "react-toastify";
 
 function HabitForm() {

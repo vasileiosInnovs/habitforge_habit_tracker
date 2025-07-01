@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../styles/Profile.css";
+import './index.css';
 
 const ProfileSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),

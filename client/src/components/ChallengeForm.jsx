@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../styles/Buttons.css";
+import './index.css'; 
 
 const ChallengeSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -16,14 +16,8 @@ function ChallengeForm({ onChallengeCreated = () => {} }) {
   const initialValues = {
     title: '',
     description: '',
-    start_date: Yup.string().required("Start date is required"),
-    end_date: Yup.string()
-        .nullable()
-        .test('is-after-start', 'End date must be after start date', function (value) {
-            const { start_date } = this.parent;
-            return !value || new Date(value) >= new Date(start_date);
-  }),
-
+    start_date: '',
+    end_date: ''
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
@@ -56,7 +50,7 @@ function ChallengeForm({ onChallengeCreated = () => {} }) {
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
-        <Form className="form">
+        <Form className="challenge-form">
           <Field name="title" placeholder="Challenge Title" className="input" />
           <ErrorMessage name="title" component="div" className="error-message" />
 
