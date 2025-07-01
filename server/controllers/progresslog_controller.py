@@ -20,7 +20,8 @@ class ProgressLogList(Resource):
             if challenge_id:
                 query = query.filter_by(challenge_id=challenge_id)
 
-            logs = ProgressLog.query.filter_by(user_id=session["user_id"]).all()
+            logs = ProgressLog.query.filter_by(user_id=session["user_id"], challenge_id=challenge_id).order_by(ProgressLog.date).all()
+
 
             if logs:                
                 logs_list = []
@@ -29,8 +30,6 @@ class ProgressLogList(Resource):
                         "id": log.id,
                         "date": log.date,
                         "time": log.time,
-                        "status": log.status,
-                        "note": log.note,
                         "habit_id": log.habit_id,
                         "challenge_id": log.challenge_id,
                         "name": log.habit.name if log.habit else None
@@ -65,9 +64,7 @@ class ProgressLogList(Resource):
                 habit_id=data.get("habit_id"),
                 challenge_id=data.get("challenge_id"),
                 date=datetime.datetime.strptime(data.get("date"), "%Y-%m-%d").date() if data.get("date") else datetime.datetime.now().date(),
-                time=datetime.datetime.strptime(data.get("time"), "%H:%M:%S").time() if data.get("time") else datetime.datetime.now().time(),
-                status=data.get("status"),
-                note=data.get("note")
+                time=datetime.datetime.strptime(data.get("time"), "%H:%M:%S").time() if data.get("time") else datetime.datetime.now().time()
             )
             
             db.session.add(new_log)
@@ -91,9 +88,6 @@ class Log(Resource):
             }, 404
         
         data = request.get_json()
-
-        log.status = data.get('status', log.status)
-        log.note = data.get('note', log.note)
 
         try:
             db.session.commit()

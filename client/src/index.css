@@ -2246,3 +2246,20 @@ button:active {
 .emoji-button:hover {
   transform: scale(1.3);
 }
+
+.challenge-streak-bar {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.streak-flame {
+  font-size: 1.25rem;
+}
+
+.no-streak {
+  font-size: 0.9rem;
+  color: var(--forest-green);
+}

@@ -11,9 +11,34 @@ function MyDay() {
   const [loading, setLoading] = useState(true);
   const [allChallenges, setAllChallenges] = useState([]);
   const [createdChallenges, setCreatedChallenges] = useState([]);
+  const [challengeStreaks, setChallengeStreaks] = useState({});
 
+  const fetchChallengeLogs = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+        credentials: "include"
+      });
 
-  useEffect(() => {
+      if (!res.ok) throw new Error("Failed to fetch logs");
+
+      const data = await res.json();
+      const streaks = {};
+
+      joinedChallenges.forEach((ch) => {
+        const logsForChallenge = data
+          .filter((log) => log.challenge_id === ch.id)
+          .map((log) => log.date);
+
+        streaks[ch.id] = calculateStreak(logsForChallenge);
+      });
+
+      setChallengeStreaks(streaks);
+    } catch (err) {
+      console.error("Error loading challenge logs:", err);
+    }
+  };
+
+  useEffect(async () => {
   const loadData = async () => {
     await fetchHabits();
 
@@ -47,6 +72,8 @@ function MyDay() {
   };
 
   loadData();
+  await fetchChallengeLogs();
+
 }, []);
 
 
@@ -208,7 +235,22 @@ const handleDeleteChallenge = async (challengeId) => {
     toast.error("Error deleting challenge");
   }
 };
+function calculateStreak(logDates) {
+  const dates = [...new Set(logDates.map(d => new Date(d).toDateString()))].sort((a, b) => new Date(b) - new Date(a));
+  let streak = 0;
+  let current = new Date();
 
+  for (let dateStr of dates) {
+    const date = new Date(dateStr);
+    if (current.toDateString() === date.toDateString()) {
+      streak++;
+      current.setDate(current.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
 
   const activeChallenges = joinedChallenges.filter(c => getChallengeStatus(c).status === 'active');
 
@@ -221,209 +263,96 @@ const handleDeleteChallenge = async (challengeId) => {
   }
 
   const handleLogChallengeProgress = async (challengeId) => {
-  try {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ challenge_id: challengeId }),
-    });
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ challenge_id: challengeId }),
+      });
 
-    if (!res.ok) throw new Error("Failed to log progress");
+      if (!res.ok) throw new Error("Failed to log progress");
 
-    toast.success("Progress logged!");
-  } catch (err) {
-    console.error("Log progress error:", err);
-    toast.error("Could not log progress");
-  }
-};
-
+      toast.success("Progress logged!");
+    } catch (err) {
+      console.error("Log progress error:", err);
+      toast.error("Could not log progress");
+    }
+  };
 
   return (
     <div className="myday-container">
-      <h1 className="myday-title">🌞 Welcome to Your Day</h1>
+      {activeChallenges.map((challenge) => {
+        const daysRemaining = getDaysRemaining(challenge.end_date);
 
-      <div className="daily-summary">
-        <div className="summary-card">
-          <h3>{streak}</h3>
-          <p>Habits Completed</p>
-        </div>
-        <div className="summary-card">
-          <h3>{activeChallenges.length}</h3>
-          <p>Active Challenges</p>
-        </div>
-        <div className="summary-card">
-          <h3>{habits.length + activeChallenges.length}</h3>
-          <p>Total Goals</p>
-        </div>
-      </div>
+        return (
+          <div key={challenge.id} className="challenge-card myday-challenge active">
+            <div className="challenge-header">
+              <h3>{challenge.title}</h3>
+              <span className="status-badge active">Active</span>
+            </div>
 
-      <div className="streak-display">
-        <h2>🔥 Today's Progress</h2>
-        <div className="streak-bar">
-          {streak > 0 ? (
-            Array(streak)
-              .fill()
-              .map((_, index) => (
-                <span key={index} className="streak-flame">
-                  🔥
-                </span>
-              ))
-          ) : (
-            <p>No habits completed yet. Let's get started!</p>
-          )}
-        </div>
-      </div>
+            <p className="challenge-description">{challenge.description}</p>
 
-      <div className="habits-section">
-        <h2>📝 Today’s Habits</h2>
-        {habits.length === 0 ? (
-          <p className="no-habits">You have no habits for today.</p>
-        ) : (
-          <ul className="habit-list">
-            {habits.map((habit) => (
-              <li key={habit.id} className="habit-card">
-                <div className="habit-text">
-                  <h3>{habit.name}</h3>
-                  <p>{habit.description}</p>
-                </div>
-                {habit.completed ? (
-                  <button className="log-button completed" disabled>
-                    Completed
-                  </button>
+            <div className="challenge-meta">
+              <p><strong>By:</strong> {challenge.creator_name}</p>
+              {challenge.end_date && (
+                <p><strong>Ends:</strong> {formatDate(challenge.end_date)}</p>
+              )}
+            </div>
+
+            {daysRemaining !== null && (
+              <div className="days-remaining">
+                {daysRemaining > 0 ? (
+                  <span className="days-left">
+                    ⏰ {daysRemaining} day{daysRemaining !== 1 ? 's' : ''} left
+                  </span>
+                ) : daysRemaining === 0 ? (
+                  <span className="ending-today">🚨 Ending today!</span>
                 ) : (
-                  <button
-                    className="log-button"
-                    onClick={() => handleLog(habit.id)}
-                  >
-                    Mark as Done
-                  </button>
+                  <span className="overdue">📅 Overdue</span>
                 )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {activeChallenges.length > 0 && (
-        <div className="challenges-section">
-          <h2>🏆 Active Challenges</h2>
-          <div className="challenges-grid">
-            {activeChallenges.map((challenge) => {
-              const daysRemaining = getDaysRemaining(challenge.end_date);
-
-              return (
-                <div key={challenge.id} className="challenge-card myday-challenge active">
-                  <div className="challenge-header">
-                    <h3>{challenge.title}</h3>
-                    <span className="status-badge active">Active</span>
-                  </div>
-                  
-                  <p className="challenge-description">{challenge.description}</p>
-                  
-                  <div className="challenge-meta">
-                    <p><strong>By:</strong> {challenge.creator_name}</p>
-                    {challenge.end_date && (
-                      <p><strong>Ends:</strong> {formatDate(challenge.end_date)}</p>
-                    )}
-                  </div>
-
-                  {daysRemaining !== null && (
-                    <div className="days-remaining">
-                      {daysRemaining > 0 ? (
-                        <span className="days-left">
-                          ⏰ {daysRemaining} day{daysRemaining !== 1 ? 's' : ''} left
-                        </span>
-                      ) : daysRemaining === 0 ? (
-                        <span className="ending-today">🚨 Ending today!</span>
-                      ) : (
-                        <span className="overdue">📅 Overdue</span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="challenge-actions">
-                    <button
-                      className="progress-btn"
-                      onClick={() => handleLogChallengeProgress(challenge.id)}
-                    >
-                      📊 Log Progress
-                    </button>
-                    {challenge.user_joined ? (
-                      <button 
-                        onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
-                        className="leave-btn secondary"
-                      >
-                        Leave
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleJoinChallenge(challenge.id)}
-                        className="join-btn primary"
-                      >
-                        Join
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {createdChallenges.length > 0 && (
-        <div className="challenges-section created-challenges-section">
-          <h2>🎯 Challenges You Created</h2>
-          <div className="challenges-grid">
-            {createdChallenges.map((challenge) => (
-              <div key={challenge.id} className="challenge-card created">
-                <h3>{challenge.title}</h3>
-                <p>{challenge.description}</p>
-                <p><strong>Participants:</strong> {challenge.participant_count || 0}</p>
-            
-                <div className="challenge-actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditChallenge(challenge)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteChallenge(challenge.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
               </div>
-            ))}
+            )}
+
+            <div className="challenge-streak-bar">
+              {challengeStreaks[challenge.id] > 0 ? (
+                Array(challengeStreaks[challenge.id])
+                  .fill()
+                  .map((_, index) => (
+                    <span key={index} className="streak-flame">🔥</span>
+                  ))
+              ) : (
+                <p className="no-streak">No streak yet</p>
+              )}
+            </div>
+
+            <div className="challenge-actions">
+              <button
+                className="progress-btn"
+                onClick={() => handleLogChallengeProgress(challenge.id)}
+              >
+                📊 Log Progress
+              </button>
+              {challenge.user_joined ? (
+                <button
+                  onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
+                  className="leave-btn secondary"
+                >
+                  Leave
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleJoinChallenge(challenge.id)}
+                  className="join-btn primary"
+                >
+                  Join
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-
-
-
-      {joinedChallenges.length > activeChallenges.length && (
-        <div className="view-all-challenges">
-          <p>You have {joinedChallenges.length - activeChallenges.length} more challenge{joinedChallenges.length - activeChallenges.length !== 1 ? 's' : ''}</p>
-          <NavLink to="/challenges" className="view-all-btn">
-            View All Challenges
-          </NavLink>
-        </div>
-      )}
-
-      <div className="quick-actions">
-        <h2>🚀 Quick Actions</h2>
-        <div className="action-buttons">
-          <NavLink to="/habits" className="action-btn">
-            ➕ Add New Habit
-          </NavLink>
-          <NavLink to="/challenges" className="action-btn">
-            🔍 Find Challenges
-          </NavLink>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }
