@@ -1371,6 +1371,10 @@ button:active {
   font-size: 1.5rem;
 }
 
+.challenge-form {
+  margin-bottom: 250px;
+}
+
 .challenge-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
