@@ -56,7 +56,7 @@ class ChallengeList(Resource):
                 "participant_count": 0
             }
 
-            return response, 201
+            return jsonify(response), 201
 
         except Exception as e:
             db.session.rollback()

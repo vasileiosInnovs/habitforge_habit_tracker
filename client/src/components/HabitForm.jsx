@@ -158,10 +158,6 @@ function HabitForm() {
 
   return (
     <div className="habit-section">
-      <h1 className="section-title">
-        {isEditing ? "Edit Habit" : "Your Habits"}
-      </h1>
-
       <form onSubmit={handleSubmit} className="form">
         <input
           name="name"

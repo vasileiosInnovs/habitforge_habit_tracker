@@ -9,6 +9,31 @@ function MyDay() {
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+  const loadData = async () => {
+    await fetchHabits();
+
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/myday/challenges`, {
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Failed to load challenges");
+
+      const data = await res.json();
+      setJoinedChallenges(data);
+    } catch (err) {
+      console.error("Error loading challenges:", err);
+      setJoinedChallenges([]);
+    }
+
+    setLoading(false);
+  };
+
+  loadData();
+}, []);
+
+
   const fetchHabits = () => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
       method: "GET",
@@ -28,11 +53,14 @@ function MyDay() {
           setStreak(0);
         }
       })
-      .catch((err) => {
-        console.error("Error fetching habits:", err);
-        setHabits([]);
-        setStreak(0);
-      });
+    .catch((err) => {
+      console.error("Error fetching habits:", err);
+      setHabits([]);
+      setStreak(0);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   };
 
   const handleLeaveChallenge = async (challengeId) => {

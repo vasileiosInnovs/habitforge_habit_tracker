@@ -46,7 +46,7 @@ function NavBar({ user, onLogout }) {
                     <NavLink to="/myday" onClick={() => setMenuOpen(false)}>My Day</NavLink>
                     <NavLink to="/habits" onClick={() => setMenuOpen(false)}>Habits</NavLink>
                     <NavLink to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</NavLink>
-                    <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink>
+                    {/* <NavLink to="/logs" onClick={() => setMenuOpen(false)}>Progress Logs</NavLink> */}
                 
                     <div className="nav-profile">
                       <NavLink to="/profile" onClick={() => setMenuOpen(false)} className="nav-profile">
