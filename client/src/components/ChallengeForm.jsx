@@ -21,24 +21,47 @@ function ChallengeForm({ onChallengeCreated = () => {} }) {
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    console.log("Submitting challenge:", values);
+    console.log("Raw form values:", values);
+    console.log("Start date value:", values.start_date);
+    console.log("Start date type:", typeof values.start_date);
+    console.log("End date value:", values.end_date);
+    console.log("End date type:", typeof values.end_date);
+
+    const challengeData = {
+      title: values.title,
+      description: values.description,
+      start_date: values.start_date,
+      end_date: values.end_date || null 
+    };
+
+    console.log("Processed challenge data:", challengeData);
+    console.log("JSON stringified data:", JSON.stringify(challengeData));
+
     fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(values)
+      body: JSON.stringify(challengeData)
     })
       .then((r) => {
-        if (!r.ok) throw new Error("Failed to create challenge");
+        console.log("Response status:", r.status);
+        console.log("Response ok:", r.ok);
+        if (!r.ok) {
+          return r.json().then(errorData => {
+            console.log("Error response data:", errorData);
+            throw new Error(`Failed to create challenge: ${JSON.stringify(errorData)}`);
+          });
+        }
         return r.json();
       })
       .then((newChallenge) => {
+        console.log("Challenge created successfully:", newChallenge);
         onChallengeCreated(newChallenge);
         resetForm();
       })
       .catch((err) => {
-        alert("Could not create challenge.");
-        console.error(err);
+        console.error("Full error object:", err);
+        alert("Could not create challenge. Check console for details.");
       })
       .finally(() => setSubmitting(false));
   };

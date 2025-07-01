@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 class ProgressLog(db.Model, SerializerMixin):
     __tablename__ = 'progresslogs'
 
-    serialize_rules = ('-habit.progresslogs', '-challenge.progresslogs',)
+    serialize_rules = ('-habit.progresslogs', '-user.progresslogs', '-user.habits')
 
     id = db.Column(db.Integer(), primary_key=True)
     habit_id = db.Column(db.Integer(), db.ForeignKey("habits.id", ondelete='CASCADE'), nullable=False)

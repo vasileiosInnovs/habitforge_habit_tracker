@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 class Habit(db.Model, SerializerMixin):
     __tablename__ = 'habits'
 
-    serialize_rules = ('-user.habits','-progresslogs.habit',)
+    serialize_rules = ('-user.habits','-progresslogs.habit', '-progresslogs.user.habits', '-user.progresslogs',)
 
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(), nullable=True)

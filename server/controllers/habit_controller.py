@@ -36,7 +36,16 @@ class HabitList(Resource):
             db.session.add(habit)
             db.session.commit()
 
-            return habit.to_dict(), 201
+            habit_dict = {
+                'id': habit.id,
+                'name': habit.name,
+                'frequency': habit.frequency,
+                'description': habit.description,
+                'user_id': habit.user_id,
+                'created_at': habit.created_at.isoformat() if habit.created_at else None
+            }
+            
+            return habit_dict, 20
 
         except Exception as e:
             db.session.rollback()

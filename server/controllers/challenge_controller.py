@@ -45,7 +45,7 @@ class ChallengeList(Resource):
 
             creator = User.query.get(user_id)
 
-            response = {
+            return {
                 "id": new_challenge.id,
                 "user_id": new_challenge.user_id,
                 "title": new_challenge.title,
@@ -54,9 +54,7 @@ class ChallengeList(Resource):
                 "end_date": new_challenge.end_date.isoformat() if new_challenge.end_date else None,
                 "creator_name": creator.username if creator else "Unknown",
                 "participant_count": 0
-            }
-
-            return jsonify(response), 201
+            }, 201
 
         except Exception as e:
             db.session.rollback()
