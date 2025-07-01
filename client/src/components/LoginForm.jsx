@@ -28,30 +28,36 @@ function LoginForm({ onLogin }) {
     };
 
     return (
-        <div className="login-container">
-          <form onSubmit={handleSubmit} className="form">
-            <h2>Login to Your Account</h2>
-            <input
-              name="username"
-              value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-              placeholder="Username"
-            />
-            <input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              placeholder="Password"
-            />
-            <button type="submit">Login</button>
-          </form>
-          
+      <div className="auth-container">
+        <div className="form-header">
+          <div className="login-container">
+            <form onSubmit={handleSubmit} className="form">
+              <h2>Login to Your Account</h2>
+              <input
+                name="username"
+                className="form-input"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                placeholder="Username"
+              />
+              <input
+                name="password"
+                className="form-input"
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Password"
+              />
+              <button type="submit" className="auth-button">Login</button>
+            </form>
+              
+          </div>
         </div>
+      </div>
     );
 }
 

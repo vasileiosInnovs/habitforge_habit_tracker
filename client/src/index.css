@@ -1,34 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Miniver&display=swap');
 
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
-  --primary: #00b894;
-  --primary-dark: #00997a;
-  --accent: #0984e3;
-  --accent-dark: #0652dd;
-  --soft-bg: #f1f3f6;
-  --text-dark: #2d3436;
-  --text-light: #636e72;
-  --white: #ffffff;
-  --radius: 12px;
-  --transition: 0.3s ease;
-  --shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  --glass: rgba(255, 255, 255, 0.15);
+    --sage-green: #87a96b;
+    --forest-green: #4a5d3a;
+    --mint-fresh: #a8e6cf;
+    --eucalyptus: #7fb069;
+    --lavender: #b19cd9;
+    --soft-purple: #9d8df1;
+    --creative-teal: #4ecdc4;
+    --inspiration-blue: #88d8c0;
+    --warm-gray: #6b7280;
+    --charcoal: #374151;
+    --stone: #9ca3af;
+    --clean-white: #fefefe;
+    --soft-cream: #faf9f6;
+    --vitality-orange: #ffa726;
+    --energy-coral: #ff7043;
+    --calm-blue: #42a5f5;
+    --balance-gold: #ffcc02;
 }
 
 body {
-  font-family: 'Inter', 'Lora', 'Miniver';
-  background: linear-gradient(120deg, #f1f3f6, #e9eef5);
-  color: var(--text-dark);
-  margin: 0;
-  padding: 1rem;
-  min-height: 100vh;
-  line-height: 1.6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, 
+        var(--mint-fresh) 0%, 
+        var(--inspiration-blue) 50%, 
+        var(--lavender) 100%
+    );
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(135, 169, 107, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(136, 216, 192, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(177, 156, 217, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* navbar */
@@ -590,6 +616,260 @@ form textarea:focus,
 form select:focus {
   outline: none;
   border-color: var(--primary);
+}
+
+ .auth-container {
+    background: rgba(250, 249, 246, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 40px rgba(135, 169, 107, 0.15),
+        0 8px 16px rgba(74, 93, 58, 0.1);
+    padding: 45px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(135, 169, 107, 0.2);
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, 
+        var(--sage-green), 
+        var(--creative-teal), 
+        var(--eucalyptus),
+        var(--lavender)
+    );
+    border-radius: 20px 20px 0 0;
+}
+
+/* Subtle organic decoration */
+.auth-container::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(168, 230, 207, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Form headers */
+.form-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.form-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--forest-green);
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--sage-green), var(--forest-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.form-header p {
+    color: var(--warm-gray);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--forest-green);
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 18px 24px;
+    border: 2px solid rgba(135, 169, 107, 0.2);
+    border-radius: 16px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--clean-white);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    color: var(--charcoal);}
+
+.form-input:focus {
+    border-color: var(--sage-green);
+    background: var(--clean-white);
+    box-shadow: 
+        0 0 0 4px rgba(135, 169, 107, 0.1),
+        0 8px 16px rgba(135, 169, 107, 0.15);
+    transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+    color: var(--stone);
+    font-weight: 400;
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.auth-button {
+    background: linear-gradient(135deg, var(--sage-green) 0%, var(--eucalyptus) 100%);
+    color: white;
+    border: none;
+    padding: 18px 32px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.auth-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 24px rgba(135, 169, 107, 0.3),
+        0 0 0 4px rgba(135, 169, 107, 0.1);
+    background: linear-gradient(135deg, var(--eucalyptus) 0%, var(--sage-green) 100%);
+}
+.auth-button:active {
+  transform: translateY(-1px);
+}
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.auth-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+.auth-button:hover::before {
+    left: 100%;
+}
+ .field-error {
+    color: var(--energy-coral);
+    font-size: 12px;
+    margin-top: 6px;
+    display: block;
+    font-weight: 500;
+}
+.form-input.error {
+    border-color: var(--energy-coral);
+    background: #fef2f2;
+}
+.form-input:focus-visible {
+    outline: 3px solid var(--sage-green);
+    outline-offset: 2px;
+}
+.auth-button:focus-visible {
+    outline: 3px solid var(--sage-green);
+    outline-offset: 2px;
+}
+
+.form-input:hover {
+    border-color: rgba(135, 169, 107, 0.4);
+    box-shadow: 0 4px 8px rgba(135, 169, 107, 0.1);
+}
+
+.form-input.valid {
+    border-color: var(--eucalyptus);
+    background: linear-gradient(135deg, var(--clean-white), #f0fdf4);
+}
+.form-input.valid:focus {
+    border-color: var(--sage-green);
+    box-shadow: 0 0 0 4px rgba(135, 169, 107, 0.1);
+}
+/* Floating label effect - Structured & Organized */
+.floating-label {
+    position: relative;
+    margin-bottom: 20px;
+}
+.floating-label .form-input {
+    padding-top: 28px;
+    padding-bottom: 12px;
+}
+.floating-label label {
+    position: absolute;
+    top: 18px;
+    left: 24px;
+    color: var(--stone);
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    margin-bottom: 0;
+}
+.floating-label .form-input:focus + label,
+.floating-label .form-input:not(:placeholder-shown) + label {
+    top: 8px;
+    font-size: 12px;
+    color: var(--sage-green);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 35px 25px;
+        margin: 15px;
+}
+    .form-header h2 {
+        font-size: 28px;
+}
+    .form-input {
+        padding: 16px 20px;
+        font-size: 16px;
+}
+    .auth-button {
+        padding: 16px 24px;
+    }
+    .wellness-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
 }
 
 /* buttons */
