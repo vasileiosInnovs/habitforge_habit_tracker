@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import '../index.css';
 
 function JoinChallengeForm({ challengeId, onJoined }) {
     const [note, setNote] = useState('');

@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import '../index.css';
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ChallengeForm from "./ChallengeForm";
 import JoinChallengeForm from "./JoinChallengeForm";
 import { toast } from "react-toastify";
-import './index.css';
+import '../index.css';
 
 function ChallengeList({ user }) {
   const [challenges, setChallenges] = useState([]);

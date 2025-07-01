@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import '../styles/Forms.css'
 import { toast } from "react-toastify";
+import '../index.css'
 
 function LoginForm({ onLogin }) {
     const [formData, setFormData] = useState({username: '', password: ''});
