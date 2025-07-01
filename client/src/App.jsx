@@ -14,6 +14,7 @@ import HabitForm from "./components/HabitForm";
 import MyDay from "./components/MyDay";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
+import Footer from "./components/Footer"
 
 function App() {
   const [user, setUser] = useState(null);
@@ -101,6 +102,7 @@ function App() {
         />
       </Routes>
       <ToastContainer />
+      <Footer />
     </>
   );
 }

@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom"
+
 import "../index.css";
 
 function Footer() {
@@ -6,17 +8,17 @@ function Footer() {
     <footer className="app-footer">
     <div className="footer-grid">
       <div className="footer-column">
-        <h4>HabitForge</h4>
+        <h4><span className="sr-only">HabitForge - </span>Empowering Growth</h4>
         <p>Helping you build better habits, achieve personal growth, and live your best life — one step at a time.</p>
       </div>
 
       <div className="footer-column">
         <h5>Quick Links</h5>
         <ul>
-          <li><a href="/myday">My Day</a></li>
-          <li><a href="/challenges">Challenges</a></li>
-          <li><a href="/profile">Profile</a></li>
-          <li><a href="/signup">Get Started</a></li>
+          <li><Link to="/myday">My Day</Link></li>
+          <li><Link to="/challenges">Challenges</Link></li>
+          <li><Link to="/profile">Profile</Link></li>
+          <li><Link to="/signup">Get Started</Link></li>
         </ul>
       </div>
 
@@ -42,10 +44,16 @@ function Footer() {
         </div>
       </div>
     </div>
+    <p>
+      <a href="#top" style={{ color: "#63b3ed", fontWeight: "bold" }}>
+        Back to top ↑
+      </a>
+    </p>
 
-  <div className="footer-bottom">
-    <p>© {new Date().getFullYear()} HabitForge. Built with intention and care.</p>
-  </div>
+
+    <div className="footer-bottom">
+      <p>© {new Date().getFullYear()} HabitForge. Built with intention and care.</p>
+    </div>
 </footer>
   );
 }
