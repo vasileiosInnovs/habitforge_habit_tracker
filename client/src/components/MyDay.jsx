@@ -90,7 +90,6 @@ function MyDay() {
         }
       );
 
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to leave challenge");
@@ -99,9 +98,13 @@ function MyDay() {
       toast.success("Successfully left challenge!");
     
       setJoinedChallenges(prev => 
-        prev.filter(challenge => challenge.id !== challengeId)
+        prev.filter(ch => ch.participation_id !== participationId)
       );
-      
+      fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setJoinedChallenges(data));      
     } catch (err) {
       console.error("Failed to leave challenge:", err);
       toast.error(err.message);
@@ -143,6 +146,33 @@ const formatDate = (dateString) => {
   const handleEditChallenge = (challenge) => {
   toast.info(`Edit challenge: ${challenge.title}`);
 };
+const handleJoinChallenge = async (challengeId) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/participation`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ challenge_id: challengeId }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || "Failed to join");
+    }
+
+    toast.success("Joined the challenge!");
+   
+    const updated = await fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
+      credentials: "include",
+    });
+    const data = await updated.json();
+    setJoinedChallenges(data);
+
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
 
 const handleDeleteChallenge = async (challengeId) => {
   const confirmed = window.confirm("Are you sure you want to delete this challenge?");
@@ -175,22 +205,24 @@ const handleDeleteChallenge = async (challengeId) => {
     );
   }
 
-  const handleLog = (habitId) => {
-    fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+  const handleLogChallengeProgress = async (challengeId) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ habit_id: habitId }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Log failed");
-        return res.json();
-      })
-      .then(() => {
-        fetchHabits();
-      })
-      .catch((err) => console.error("Error logging habit", err));
-  };
+      body: JSON.stringify({ challenge_id: challengeId }),
+    });
+
+    if (!res.ok) throw new Error("Failed to log progress");
+
+    toast.success("Progress logged!");
+  } catch (err) {
+    console.error("Log progress error:", err);
+    toast.error("Could not log progress");
+  }
+};
+
 
   return (
     <div className="myday-container">
@@ -296,15 +328,27 @@ const handleDeleteChallenge = async (challengeId) => {
                   )}
 
                   <div className="challenge-actions">
-                    <button className="progress-btn">
+                    <button
+                      className="progress-btn"
+                      onClick={() => handleLogChallengeProgress(challenge.id)}
+                    >
                       📊 Log Progress
                     </button>
-                    <button 
-                      onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
-                      className="leave-btn secondary"
-                    >
-                      Leave
-                    </button>
+                    {challenge.user_joined ? (
+                      <button 
+                        onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
+                        className="leave-btn secondary"
+                      >
+                        Leave
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleJoinChallenge(challenge.id)}
+                        className="join-btn primary"
+                      >
+                        Join
+                      </button>
+                    )}
                   </div>
                 </div>
               );

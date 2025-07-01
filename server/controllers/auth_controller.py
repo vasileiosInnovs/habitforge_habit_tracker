@@ -1,4 +1,4 @@
-from flask import request, session, make_response, jsonify
+from flask import request, session
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from server.models import db, User

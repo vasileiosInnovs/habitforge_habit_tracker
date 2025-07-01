@@ -1,4 +1,4 @@
-from flask import jsonify, make_response, request, session
+from flask import request, session
 from flask_restful import Resource
 from server.models import db, Habit
 import traceback
@@ -7,7 +7,7 @@ class HabitList(Resource):
     def get(self):
         user_id = session.get("user_id")
         if not user_id:
-            return make_response(jsonify({'error': 'Unauthorized'}), 401)
+            return ({'error': 'Unauthorized'}), 401
 
         habits = Habit.query.filter_by(user_id=user_id).all()
         habits_list = [habit.to_dict() for habit in habits]
@@ -56,18 +56,24 @@ class HabitByID(Resource):
     def get(self, id):
         user_id = session.get("user_id")
         if not user_id:
-            return make_response(jsonify({'error': 'Unauthorized'}), 401)
+            return {'error': 'Unauthorized'}, 401
 
         habit = Habit.query.get(id)
         if habit and habit.user_id == user_id:
             return habit.to_dict(), 200
         else:
-            return make_response(jsonify({"error": "Habit not found"}), 404)
+            return ({"error": "Habit not found"}), 404
         
     def patch(self, id):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"error": "Unauthorized"}, 401
+
         habit = Habit.query.get(id)
         if not habit:
             return {"error": "Habit not found"}, 404
+        if habit.user_id != user_id:
+            return {"error": "You are not allowed to update this habit"}, 403
 
         data = request.get_json()
         print(f"Updating habit {id} with data: {data}")
@@ -85,6 +91,7 @@ class HabitByID(Resource):
             import traceback
             traceback.print_exc()
             return {"error": "Failed to update habit"}, 500
+
 
     def delete(self, id):
         habit = Habit.query.get(id)

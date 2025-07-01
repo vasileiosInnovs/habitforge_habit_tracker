@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, make_response, request, session
+from flask import request, session
 from flask_restful import Resource
 from server.models import Challenge, db
 from server.models.participation import Participation

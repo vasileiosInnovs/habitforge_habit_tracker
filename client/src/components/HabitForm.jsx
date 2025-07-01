@@ -128,16 +128,16 @@ function HabitForm() {
     const updatedCompleted = !habit.completed;
 
      fetch(`${process.env.REACT_APP_API_URL}/habits/${habit.id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      name: habit.name,
-      description: habit.description,
-      frequency: habit.frequency,
-      completed: updatedCompleted
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: habit.name,
+          description: habit.description,
+          frequency: habit.frequency,
+          completed: updatedCompleted
+        })
     })
-})
       .then((res) => {
         if (!res.ok) throw new Error("Failed to update habit status");
         return res.json();

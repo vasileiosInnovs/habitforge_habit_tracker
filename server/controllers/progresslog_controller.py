@@ -1,5 +1,5 @@
 import datetime
-from flask import jsonify, make_response, request, session
+from flask import  request, session
 from flask_restful import Resource
 
 from server.models import ProgressLog, db
@@ -40,23 +40,24 @@ class ProgressLogList(Resource):
                 return logs_list, 200
             
             else:
-                return make_response(jsonify({
+                return {
                     "Message": "There are no logs"
-                }), 200)
+                }, 200
             
         else:
-            return make_response(
-                jsonify({'error': 'Unauthorized'}),
-                401
-            )
+            return {'error': 'Unauthorized'}, 401
         
 
     def post(self):
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({'error': 'Unauthorized'}), 401
+            return {'error': 'Unauthorized'}, 401
         
         data = request.get_json()
+        challenge_id = data.get("challenge_id")
+
+        if not challenge_id:
+            return {'error': 'Challenge ID is required'}, 400
 
         try:
             new_log = ProgressLog(
@@ -72,22 +73,22 @@ class ProgressLogList(Resource):
             db.session.add(new_log)
             db.session.commit()
 
-            return jsonify({"message": "Log created", "id": new_log.id}), 201
+            return {"message": "Log created", "id": new_log.id}, 201
         
         except Exception as e:
-            return jsonify({"error": str(e)}), 400
+            return {"error": str(e)}, 400
 
 class Log(Resource):
     def patch(self, id):
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({'error': 'Unauthorized'}), 401
+            return {'error': 'Unauthorized'}, 401
         
         log = ProgressLog.query.get(id)
         if not log or log.user_id != user_id:
-            return jsonify({
+            return {
                 'error': 'Log not found or authorized'
-            }), 404
+            }, 404
         
         data = request.get_json()
 
@@ -96,36 +97,36 @@ class Log(Resource):
 
         try:
             db.session.commit()
-            return jsonify({
+            return {
                 'message': 'Log updated successfully'
-            }), 200
+            }, 200
         except Exception:
             db.session.rollback()
-            return jsonify({
+            return {
                 'error': 'Failed to update log'
-            }), 500
+            }, 500
         
     def delete(self, id):
         user_id = session.get('user_id')
         if not user_id:
-            return jsonify({
+            return {
                 'error': 'Unauthorized'
-            }), 401
+            }, 401
         
         log = ProgressLog.query.get(id)
         if not log or log.user_id != user_id:
-            return jsonify({
+            return {
                 'error': 'Log not found or unauthorized'
-            }), 404
+            }, 404
         
         try:
             db.session.delete(log)
             db.session.commit()
-            return jsonify({
+            return {
                 'message': 'Log deleted'
-            }), 204
+            }, 204
         except Exception:
             db.session.rollback()
-            return jsonify({
+            return {
                 'error': 'Failed to delete log'
-            }), 500
+            }, 500
