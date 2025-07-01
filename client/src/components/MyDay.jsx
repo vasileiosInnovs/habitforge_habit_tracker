@@ -103,7 +103,7 @@ function MyDay() {
   const handleLeaveChallenge = async (participationId, challengeId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/participation/${participationId}`,
+      `${process.env.REACT_APP_API_URL}/participation`,
         {
           method: "DELETE",
           credentials: "include",
@@ -397,7 +397,17 @@ function calculateStreak(logDates) {
               >
                 📊 Log Progress
               </button>
-              {challenge.user_joined ? (
+              {challenge.user_joined && challenge.participation_id && (
+                <button
+                  onClick={() =>
+                    handleLeaveChallenge(challenge.participation_id, challenge.id)
+                  }
+                  className="leave-btn secondary"
+                >
+                  Leave
+                </button>
+              )}
+              {/* {challenge.user_joined ? (
                 <button
                   onClick={() => handleLeaveChallenge(challenge.participation_id, challenge.id)}
                   className="leave-btn secondary"
@@ -411,7 +421,7 @@ function calculateStreak(logDates) {
                 >
                   Join
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         );
