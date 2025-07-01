@@ -43,8 +43,7 @@ api.add_resource(HabitByID, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
-api.add_resource(MyDayChallenges, '/myday/challenges')
-api.add_resource(UserCreatedChallenges, '/challenges/created')
+api.add_resource(MyDayChallenges, '/myday')
 
 
 
