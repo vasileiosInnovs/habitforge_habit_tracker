@@ -282,12 +282,12 @@ const formatDate = (dateString) => {
       <div className="quick-actions">
         <h2>🚀 Quick Actions</h2>
         <div className="action-buttons">
-          <a href="/habits" className="action-btn">
+          <NavLink to="/habits" className="action-btn">
             ➕ Add New Habit
-          </a>
-          <a href="/challenges" className="action-btn">
+          </NavLink>
+          <NavLink to="/challenges" className="action-btn">
             🔍 Find Challenges
-          </a>
+          </NavLink>
         </div>
       </div>
     </div>
