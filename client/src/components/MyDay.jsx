@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import '../index.css';
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
-import ChallengeForm from "./ChallengeForm";
 
 function MyDay() {
   const [habits, setHabits] = useState([]);
@@ -38,17 +37,14 @@ function MyDay() {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
   const loadData = async () => {
     await fetchHabits();
-
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
         credentials: "include",
       });
-
       if (!res.ok) throw new Error("Failed to load challenges");
-
       const data = await res.json();
       setJoinedChallenges(data);
     } catch (err) {
@@ -68,15 +64,12 @@ function MyDay() {
       console.error("Error loading created challenges:", err);
     }
 
+    await fetchChallengeLogs();
     setLoading(false);
   };
 
   loadData();
-  await fetchChallengeLogs();
-
 }, []);
-
-
 
   const fetchHabits = () => {
     fetch(`${process.env.REACT_APP_API_URL}/habits`, {
@@ -263,26 +256,96 @@ function calculateStreak(logDates) {
   }
 
   const handleLogChallengeProgress = async (challengeId) => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ challenge_id: challengeId }),
-      });
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ challenge_id: challengeId }),
+    });
 
-      if (!res.ok) throw new Error("Failed to log progress");
+    if (!res.ok) throw new Error("Failed to log progress");
 
-      toast.success("Progress logged!");
-    } catch (err) {
-      console.error("Log progress error:", err);
-      toast.error("Could not log progress");
-    }
-  };
+    toast.success("Progress logged!");
+  } catch (err) {
+    console.error("Log progress error:", err);
+    toast.error("Could not log progress");
+  }
+};
+
 
   return (
     <div className="myday-container">
-      {activeChallenges.map((challenge) => {
+      <h1 className="myday-title">🌞 Welcome to Your Day</h1>
+
+      <div className="daily-summary">
+        <div className="summary-card">
+          <h3>{streak}</h3>
+          <p>Habits Completed</p>
+        </div>
+        <div className="summary-card">
+          <h3>{activeChallenges.length}</h3>
+          <p>Active Challenges</p>
+        </div>
+        <div className="summary-card">
+          <h3>{habits.length + activeChallenges.length}</h3>
+          <p>Total Goals</p>
+        </div>
+      </div>
+
+      <div className="streak-display">
+        <h2>🔥 Today's Progress</h2>
+        <div className="streak-bar">
+          {streak > 0 ? (
+            Array(streak)
+              .fill()
+              .map((_, index) => (
+                <span key={index} className="streak-flame">
+                  🔥
+                </span>
+              ))
+          ) : (
+            <p>No habits completed yet. Let's get started!</p>
+          )}
+        </div>
+      </div>
+
+      <div className="habits-section">
+        <h2>📝 Today’s Habits</h2>
+        {habits.length === 0 ? (
+          <p className="no-habits">You have no habits for today.</p>
+        ) : (
+          <ul className="habit-list">
+            {habits.map((habit) => (
+              <li key={habit.id} className="habit-card">
+                <div className="habit-text">
+                  <h3>{habit.name}</h3>
+                  <p>{habit.description}</p>
+                </div>
+                {habit.completed ? (
+                  <button className="log-button completed" disabled>
+                    Completed
+                  </button>
+                ) : (
+                  <button
+                    className="log-button"
+                    onClick={() => handleLog(habit.id)}
+                  >
+                    Mark as Done
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {activeChallenges.length > 0 && (
+        <div className="challenges-section">
+          <h2>🏆 Active Challenges</h2>
+          <div className="challenges-grid">
+      
+        {activeChallenges.map((challenge) => {
         const daysRemaining = getDaysRemaining(challenge.end_date);
 
         return (
@@ -291,16 +354,28 @@ function calculateStreak(logDates) {
               <h3>{challenge.title}</h3>
               <span className="status-badge active">Active</span>
             </div>
-
+        
+            <div className="challenge-streak-bar">
+              {challengeStreaks[challenge.id] > 0 ? (
+                Array(challengeStreaks[challenge.id])
+                  .fill()
+                  .map((_, index) => (
+                    <span key={index} className="streak-flame">🔥</span>
+                  ))
+              ) : (
+                <p className="no-streak">No streak yet</p>
+              )}
+            </div>
+            
             <p className="challenge-description">{challenge.description}</p>
-
+            
             <div className="challenge-meta">
               <p><strong>By:</strong> {challenge.creator_name}</p>
               {challenge.end_date && (
                 <p><strong>Ends:</strong> {formatDate(challenge.end_date)}</p>
               )}
             </div>
-
+            
             {daysRemaining !== null && (
               <div className="days-remaining">
                 {daysRemaining > 0 ? (
@@ -314,19 +389,7 @@ function calculateStreak(logDates) {
                 )}
               </div>
             )}
-
-            <div className="challenge-streak-bar">
-              {challengeStreaks[challenge.id] > 0 ? (
-                Array(challengeStreaks[challenge.id])
-                  .fill()
-                  .map((_, index) => (
-                    <span key={index} className="streak-flame">🔥</span>
-                  ))
-              ) : (
-                <p className="no-streak">No streak yet</p>
-              )}
-            </div>
-
+      
             <div className="challenge-actions">
               <button
                 className="progress-btn"
@@ -353,6 +416,62 @@ function calculateStreak(logDates) {
           </div>
         );
       })}
+          </div>
+        </div>
+      )}
+
+      {createdChallenges.length > 0 && (
+        <div className="challenges-section created-challenges-section">
+          <h2>🎯 Challenges You Created</h2>
+          <div className="challenges-grid">
+            {createdChallenges.map((challenge) => (
+              <div key={challenge.id} className="challenge-card created">
+                <h3>{challenge.title}</h3>
+                <p>{challenge.description}</p>
+                <p><strong>Participants:</strong> {challenge.participant_count || 0}</p>
+            
+                <div className="challenge-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEditChallenge(challenge)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteChallenge(challenge.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+
+
+      {joinedChallenges.length > activeChallenges.length && (
+        <div className="view-all-challenges">
+          <p>You have {joinedChallenges.length - activeChallenges.length} more challenge{joinedChallenges.length - activeChallenges.length !== 1 ? 's' : ''}</p>
+          <NavLink to="/challenges" className="view-all-btn">
+            View All Challenges
+          </NavLink>
+        </div>
+      )}
+
+      <div className="quick-actions">
+        <h2>🚀 Quick Actions</h2>
+        <div className="action-buttons">
+          <NavLink to="/habits" className="action-btn">
+            ➕ Add New Habit
+          </NavLink>
+          <NavLink to="/challenges" className="action-btn">
+            🔍 Find Challenges
+          </NavLink>
+        </div>
+      </div>
     </div>
   );
 }
