@@ -15,12 +15,16 @@ class HabitList(Resource):
         return habits_list, 200
 
     def post(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
         data = request.get_json()
 
         try:
             name = data.get("name")
             frequency = data.get("frequency")
             description = data.get("description")
+            completed = data.get("completed", False)
             user_id = session.get("user_id")
 
             if not user_id:
@@ -30,6 +34,7 @@ class HabitList(Resource):
                 name=name,
                 frequency=frequency,
                 description=description,
+                completed=completed,
                 user_id=user_id
             )
 
@@ -41,6 +46,7 @@ class HabitList(Resource):
                 'name': habit.name,
                 'frequency': habit.frequency,
                 'description': habit.description,
+                'completed':habit.completed,
                 'user_id': habit.user_id
             }
             
@@ -94,6 +100,10 @@ class HabitByID(Resource):
 
 
     def delete(self, id):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
+        
         habit = Habit.query.get(id)
         if not habit:
             return {"error": "Habit not found"}, 404
