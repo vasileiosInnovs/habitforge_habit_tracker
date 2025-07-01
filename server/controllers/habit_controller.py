@@ -44,7 +44,7 @@ class HabitList(Resource):
                 'user_id': habit.user_id
             }
             
-            return habit_dict, 20
+            return habit_dict, 201
 
         except Exception as e:
             db.session.rollback()

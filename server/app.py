@@ -42,7 +42,7 @@ api.add_resource(HabitByID, '/habits/<int:id>')
 
 api.add_resource(ChallengeList, '/challenges')
 api.add_resource(ChallengesIndex, '/challenges/<int:id>')
-api.add_resource(MyDayChallenges, '/myday')
+api.add_resource(MyDayChallenges, '/myday/challenges')
 
 
 api.add_resource(ProgressLogList, '/logs')

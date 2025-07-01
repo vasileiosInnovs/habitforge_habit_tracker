@@ -18,7 +18,7 @@ function MyDay() {
     await fetchHabits();
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/myday/challenges`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
         credentials: "include",
       });
 
@@ -32,7 +32,7 @@ function MyDay() {
     }
 
     try {
-      const resCreated = await fetch(`${process.env.REACT_APP_API_URL}/challenges/created`, {
+      const resCreated = await fetch(`${process.env.REACT_APP_API_URL}/challenges`, {
         credentials: "include",
       });
       if (resCreated.ok) {
@@ -348,9 +348,9 @@ const handleDeleteChallenge = async (challengeId) => {
       {joinedChallenges.length > activeChallenges.length && (
         <div className="view-all-challenges">
           <p>You have {joinedChallenges.length - activeChallenges.length} more challenge{joinedChallenges.length - activeChallenges.length !== 1 ? 's' : ''}</p>
-          <a href="/challenges" className="view-all-btn">
+          <NavLink to="/challenges" className="view-all-btn">
             View All Challenges
-          </a>
+          </NavLink>
         </div>
       )}
 

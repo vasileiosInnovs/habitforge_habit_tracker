@@ -83,7 +83,7 @@ function App() {
           }
         />
 
-        <Route path="/myday" element={
+        <Route path="/participations" element={
           <ProtectedRoute user={user}>
             <JoinChallengeForm />
           </ProtectedRoute>
