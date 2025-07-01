@@ -116,5 +116,3 @@ class ChallengesIndex(Resource):
             return make_response(jsonify({'message': 'Challenge successfully deleted.'}), 204)
         else:
             return make_response(jsonify({'error': 'Unauthorized'}), 401)
-
-
