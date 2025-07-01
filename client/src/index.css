@@ -2263,3 +2263,7 @@ button:active {
   font-size: 0.9rem;
   color: var(--forest-green);
 }
+
+.mark-btn {
+  color: black;
+}
