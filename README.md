@@ -117,8 +117,7 @@ server/                 # Flask backend
 
 ## 🌐 Deployment Notes
 
-* For deployment, you can use **Render** (backend) + **Netlify/Vercel** (frontend).
-* Make sure to update `REACT_APP_API_URL` in production.
+* Visit this webpage for the deployed version of the website https://habitforge.onrender.com
 
 ---
 
