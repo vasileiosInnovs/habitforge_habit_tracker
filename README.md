@@ -38,7 +38,7 @@ A full-stack web application that empowers users to build better habits, join ch
 
 ## 📂 Project Structure
 
-```
+
 
 client/                 # React frontend
 ├── components/         # Reusable UI components
@@ -51,8 +51,6 @@ server/                 # Flask backend
 ├── controllers/        # Flask route blueprints
 ├── app.py              # Application factory
 └── config.py           # Configuration
-
-````
 
 ---
 
