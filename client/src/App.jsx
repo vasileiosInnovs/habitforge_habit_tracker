@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ScrollToTop from "./ScrollToTop";
 
 import ProtectedRoute from './components/ProtectedRoute';
 import NavBar from './components/NavBar';
@@ -48,6 +49,7 @@ function App() {
   return (
     <>
       <NavBar user={user} onLogout={handleLogout} />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         
